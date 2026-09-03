@@ -15,7 +15,7 @@ M365-Assess repo
   └─ controls/frameworks/*.json    ← committed for offline use
        │
        ▼  loaded at runtime
-  Common/Import-ControlRegistry.ps1 / web/src/engine/registry/load-controls.ts
+  web/src/engine/registry/load-controls.ts
 ```
 
 **Key points:**
@@ -47,43 +47,3 @@ M365-Assess repo
 <!-- registry-stats:files:begin -->
 `registry.json` currently contains **292 checks** across **16 collector families**, including **5 local extension checks**. Mappings span **21 framework keys**, 16 of which have report-view definitions in `frameworks/` (added `cis-m365-v7` 155 Ensures locally from CIS PDF — upstream CheckID not yet at v7).
 <!-- registry-stats:files:end -->
-
-## Updating Registry Data
-
-1. Update controls in the [CheckID](https://github.com/Galvnyz/CheckID) repo
-2. Cut a new CheckID release (e.g., `v1.3.0`)
-3. Update the `TAG` variable in `.github/workflows/ci.yml` to the new tag
-4. CI will detect the diff and flag it; copy the updated files into a PR
-
-## Runtime Usage
-
-```powershell
-# PowerShell (legacy)
-. ./Common/Import-ControlRegistry.ps1
-$lookup = Import-ControlRegistry -ControlsPath ./controls
-$lookup['ENTRA-MFA-001']
-```
-```typescript
-// SaaS (web) — byte-unmodified FRM-01
-import { loadRegistry, loadFrameworks } from "@/engine/registry/load-controls";
-loadFrameworks().find(f => f.id === "cis-m365-v7") // 155 Ensures
-```
-
-## Severity Rating Rubric
-
-`risk-severity.json` is the local (non-upstream) severity overlay consumed by `-QuickScan`
-selection, Now/Next/Later lane bucketing, and report/XLSX severity badges. Two provenance
-tiers:
-
-- **Curated** — M365-context judgment calls that deliberately override the upstream
-  CheckID `impactRating.severity` where tenant blast radius differs (example: admin MFA
-  escalated High → Critical; an unauthenticated-attacker path to Global Admin is always
-  Critical regardless of upstream weighting).
-- **Seeded (#956)** — entries adopted verbatim from upstream `impactRating.severity`
-  (`Informational` maps to `Info`). Seeded values are honest defaults, not final word —
-  re-curate when a check's M365 blast radius diverges from the generic upstream rating,
-  and prefer escalation over demotion when in doubt.
-
-Every check in `registry.json` must have an entry here — `Import-ControlRegistry` exposes
-`severityRated` and the generated `docs/reference/COVERAGE.md` publishes the count, so a
-new check without a rating shows up immediately in the stats gate.

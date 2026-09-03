@@ -1,4 +1,4 @@
-# M365-Assess Web — Self-hosted M365 Security Assessment
+# M365-Assessment Full Web SaaS — Self-hosted M365 Security Assessment
 
 Multi-tenant SaaS (Next.js + TypeScript) — customers sign up, consent via Entra **admin consent**, run a **read-only** Graph assessment and get a scored **self-contained HTML report** (15 frameworks) — no agent, no PowerShell.
 
@@ -17,8 +17,6 @@ git clone <your-repo-url> m365-assess && cd m365-assess
 cp .env.example .env
 # edit .env — see below
 ```
-
-`.env` (`gitignored`, `docker-compose.yml` `env_file: .env`):
 
 ```dotenv
 APP_BASE_URL=http://localhost:3000
