@@ -1,10 +1,9 @@
 import type { ReportData } from "./build-report-data";
 
 /**
- * Build a self-contained HTML snapshot of the SaaS report.
- * No external CSS/JS — all styles inlined, data embedded as JSON + rendered tables.
- * Mirrors legacy Get-ReportTemplate.ps1 intent (single-file offline) but uses
- * the SaaS ReportData shape (buildReportData) and modern dark-first tokens.
+ * Build a self-contained HTML snapshot with tabs like the live ReportView.
+ * Tabs: Overview | Findings | Reviews | Remediation | Frameworks
+ * No external CSS/JS — styles + tab JS inlined, window.REPORT_DATA embedded.
  */
 export function buildSelfContainedHtml(
   data: ReportData,
@@ -118,7 +117,14 @@ tr.detail td{background:rgba(39,39,42,0.4);font-size:12px}
 .stat .value{font-size:20px;font-weight:600}
 .alert{border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:12px 0;background:var(--card)}
 .alert-review{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.08)}
-@media print{body{background:white;color:black}.card{break-inside:avoid}}
+.tabs{border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tab{padding:8px 14px;font-size:14px;font-weight:500;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;background:transparent;color:var(--muted-foreground);cursor:pointer}
+.tab.active{background:var(--card);color:var(--foreground);border-color:var(--border);border-bottom:1px solid var(--card);margin-bottom:-1px}
+.tab-review.active{color:var(--review);border-color:rgba(168,85,247,0.3)}
+.badge-tab{margin-left:6px;padding:1px 6px;font-size:11px}
+.tab-panel{display:none;padding-top:16px}
+.tab-panel.active{display:block}
+@media print{.tabs{display:none}.tab-panel{display:block !important}body{background:white;color:black}.card{break-inside:avoid}}
 </style>
 <script>${reportDataJson}</script>
 </head>
@@ -140,28 +146,61 @@ tr.detail td{background:rgba(39,39,42,0.4);font-size:12px}
 <div class="stat"><div class="label">Skipped / Info</div><div class="value">${data.summary.infoAndSkipped}</div></div>
 </div>
 
-${data.summary.review > 0 ? `<div class="alert alert-review"><strong>${data.summary.review} review${data.summary.review===1?"":"s"} need your attention</strong> — counted as not passing. Open Reviews section below to triage. 100% requires 0 reviews.</div>` : ""}
+${data.summary.review > 0 ? `<div class="alert alert-review"><strong>${data.summary.review} review${data.summary.review===1?"":"s"} need your attention</strong> — counted as not passing. Open Reviews tab to triage. 100% requires 0 reviews.</div>` : ""}
 
 <div class="alert"><strong>Coverage</strong><div>${esc(data.coverage.label)}</div><div class="mono">${esc(data.coverage.domainsPresent.join(", "))}</div></div>
 
+<div class="tabs" role="tablist">
+<button class="tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+<button class="tab" data-tab="findings" role="tab">Findings <span class="badge badge-info badge-tab">${data.findings.length}</span></button>
+<button class="tab ${data.summary.review>0?"tab-review":""}" data-tab="reviews" role="tab">Reviews <span class="badge ${data.summary.review>0?"badge-review":"badge-info"} badge-tab">${data.summary.review}</span></button>
+<button class="tab" data-tab="remediation" role="tab">Remediation <span class="badge badge-info badge-tab">${data.remediationItems.length}</span></button>
+<button class="tab" data-tab="frameworks" role="tab">Frameworks</button>
+</div>
+
+<div id="tab-overview" class="tab-panel active">
+<p style="color:var(--muted-foreground);font-size:13px">Overview shows the headline scorecard. Use tabs to drill into Findings (all), Reviews (human judgment), Remediation (Fail+Warning) and Framework scores. Export buttons are available in the live app.</p>
+</div>
+
+<div id="tab-findings" class="tab-panel">
 <h2>Findings — all checks</h2>
 <table><thead><tr><th>Domain</th><th>Category</th><th>Setting / CheckId</th><th>Current</th><th>Recommended</th><th>Status</th><th>Severity</th></tr></thead><tbody>
 ${findingsRows || `<tr><td colspan="7">No findings</td></tr>`}
 </tbody></table>
+</div>
 
+<div id="tab-reviews" class="tab-panel">
 <h2>Reviews — human judgment required (${data.findings.filter((f) => f.status==="Review").length})</h2>
 ${reviewRows ? `<table><thead><tr><th>Domain</th><th>Category</th><th>Setting / CheckId</th><th>Current</th><th>Recommended</th><th>Severity</th></tr></thead><tbody>${reviewRows}</tbody></table>` : `<div class="alert">No reviews pending — pass rate can reach 100%.</div>`}
+</div>
 
+<div id="tab-remediation" class="tab-panel">
 <h2>Remediation — Fail + Warning prioritized</h2>
 ${remediationCards || `<div style="color:var(--muted-foreground)">No open issues — no remediation needed.</div>`}
+</div>
 
-<h2>Frameworks — 15 scores</h2>
+<div id="tab-frameworks" class="tab-panel">
+<h2>Frameworks — ${data.frameworks.length} scores</h2>
 <table><thead><tr><th>Framework</th><th>Score</th><th>Controls covered</th><th>Checks</th></tr></thead><tbody>
 ${frameworksRows}
 </tbody></table>
+</div>
 
 <div style="margin-top:24px;font-size:12px;color:var(--muted-foreground)">Generated by M365-Assess Web — self-contained HTML, no network required. window.REPORT_DATA embedded for tooling. — ${new Date().toISOString()}</div>
 </div>
+<script>
+(function(){
+  var tabs=document.querySelectorAll('.tab');
+  var panels=document.querySelectorAll('.tab-panel');
+  function activate(id){
+    tabs.forEach(function(t){ var a=t.getAttribute('data-tab')===id; t.classList.toggle('active',a); t.setAttribute('aria-selected',a?'true':'false'); });
+    panels.forEach(function(p){ p.classList.toggle('active', p.id==='tab-'+id); });
+    try{localStorage.setItem('m365-report-tab',id);}catch(e){}
+  }
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ activate(t.getAttribute('data-tab')); }); });
+  try{var s=localStorage.getItem('m365-report-tab'); if(s) activate(s);}catch(e){}
+})();
+</script>
 </body>
 </html>`;
 }
