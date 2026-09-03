@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Terms of Use",
+    "setting": "Terms of Use Agreement Policy",
+    "currentValue": "1 agreement(s) with acceptance required before viewing",
+    "recommendedValue": "At least one Terms of Use agreement with isViewingBeforeAcceptanceRequired = true",
+    "status": "Pass",
+    "checkId": "ENTRA-TOU-001.1",
+    "remediation": "Entra admin center > Identity Governance > Terms of use. Verify agreements have \"Require users to expand the terms of use\" enabled and are assigned via Conditional Access policies.",
+    "intentDesign": false
+  }
+]

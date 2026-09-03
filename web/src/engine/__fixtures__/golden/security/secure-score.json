@@ -1,0 +1,54 @@
+[
+  {
+    "category": "Secure Score",
+    "setting": "Microsoft Secure Score",
+    "currentValue": "CurrentScore=42; MaxScore=100; Percentage=42%; CreatedDateTime=2026-09-01T12:00:00Z; AverageComparativeScore=35; MicrosoftScore=10; CustomerScore=32",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "DEFENDER-SECURESCORE-001.1",
+    "remediation": "Review and act on improvement actions. Microsoft Secure Score > . Assign owners to high-impact actions and track progress Portal: security.microsoft.com/securescore > Improvement actions > sort by Score impact",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScores?$top=180",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All"
+  },
+  {
+    "category": "Secure Score",
+    "setting": "Secure Score (2026-08-15T12:00:00Z)",
+    "currentValue": "CurrentScore=38; MaxScore=100; Percentage=38%; CreatedDateTime=2026-08-15T12:00:00Z",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScores?$top=180",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All"
+  },
+  {
+    "category": "Secure Score Controls",
+    "setting": "Enable MFA for admins",
+    "currentValue": "Category=Identity; ScoreImpact=5; CurrentScore=10; MaxScore=10; ImplementationStatus=Implemented; UserImpact=Low; Threats=Account compromise",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScores?$top=180",
+    "collectionMethod": "Derived",
+    "permissionRequired": "SecurityEvents.Read.All"
+  },
+  {
+    "category": "Secure Score Controls",
+    "setting": "Require device compliance",
+    "currentValue": "Category=Device; ScoreImpact=8; CurrentScore=32; MaxScore=8; ImplementationStatus=NotImplemented; UserImpact=Medium; Threats=Device compromise",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScores?$top=180",
+    "collectionMethod": "Derived",
+    "permissionRequired": "SecurityEvents.Read.All"
+  }
+]

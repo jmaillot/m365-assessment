@@ -1,0 +1,75 @@
+{
+  "frameworkId": "fedramp",
+  "label": "FedRAMP Rev 5",
+  "version": "Rev 5",
+  "description": "Federal Risk and Authorization Management Program — US government-wide program standardizing cloud service security assessment and authorization. Based on NIST SP 800-53.",
+  "homepageUrl": "https://www.fedramp.gov/",
+  "css": "fw-fedramp",
+  "totalControls": 325,
+  "registryKey": "fedramp",
+  "csvColumn": "Fedramp",
+  "displayOrder": 13,
+  "scoring": {
+    "method": "profile-compliance",
+    "profiles": {
+      "LI-SaaS": {
+        "label": "FedRAMP LI-SaaS",
+        "css": "fw-fedramp",
+        "profileKey": "LI-SaaS",
+        "controlCount": 36
+      },
+      "Low": {
+        "label": "FedRAMP Low",
+        "css": "fw-fedramp",
+        "profileKey": "Low",
+        "controlCount": 156
+      },
+      "Moderate": {
+        "label": "FedRAMP Moderate",
+        "css": "fw-fedramp",
+        "profileKey": "Moderate",
+        "controlCount": 323
+      },
+      "High": {
+        "label": "FedRAMP High",
+        "css": "fw-fedramp-high",
+        "profileKey": "High",
+        "controlCount": 370
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "background": "#eff6ff",
+      "color": "#1e40af"
+    },
+    "dark": {
+      "background": "#1E3A5F",
+      "color": "#93C5FD"
+    }
+  },
+  "groupBy": "family-letter-prefix",
+  "groupLabel": "family",
+  "groups": {
+    "AC": "Access Control",
+    "AT": "Awareness & Training",
+    "AU": "Audit & Accountability",
+    "CA": "Assessment, Authorization & Monitoring",
+    "CM": "Configuration Management",
+    "CP": "Contingency Planning",
+    "IA": "Identification & Authentication",
+    "IR": "Incident Response",
+    "MA": "Maintenance",
+    "MP": "Media Protection",
+    "PE": "Physical & Environmental Protection",
+    "PL": "Planning",
+    "PM": "Program Management",
+    "PS": "Personnel Security",
+    "PT": "PII Processing & Transparency",
+    "RA": "Risk Assessment",
+    "SA": "System & Services Acquisition",
+    "SC": "System & Communications Protection",
+    "SI": "System & Information Integrity",
+    "SR": "Supply Chain Risk Management"
+  }
+}

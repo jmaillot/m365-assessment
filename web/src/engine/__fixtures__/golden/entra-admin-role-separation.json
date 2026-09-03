@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Admin Role Separation",
+    "setting": "Privileged Account vs Daily-Use Account Separation",
+    "currentValue": "Admin accounts checked: 2 — none have Exchange Online plans",
+    "recommendedValue": "Admin accounts must not have Exchange mailbox service plans",
+    "status": "Pass",
+    "checkId": "ENTRA-ADMINROLE-SEPARATION-001.1",
+    "remediation": "Create separate cloud-only admin accounts without Exchange Online licenses. Remove mailbox service plan assignments from privileged role accounts. Entra admin center > Users > select admin user > Licenses.",
+    "intentDesign": false
+  }
+]

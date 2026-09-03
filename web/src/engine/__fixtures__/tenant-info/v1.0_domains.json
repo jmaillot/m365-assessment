@@ -1,0 +1,9 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#domains",
+  "value": [
+    { "id": "fabrikam.com", "isVerified": false, "isDefault": false },
+    { "id": "partner.contoso.com", "isVerified": true, "isDefault": false },
+    { "id": "contoso.com", "isVerified": true, "isDefault": true },
+    { "id": "contoso.onmicrosoft.com", "isVerified": true, "isDefault": false }
+  ]
+}

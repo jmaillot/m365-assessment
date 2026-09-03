@@ -1,0 +1,32 @@
+[
+  {
+    "category": "Conditional Access",
+    "setting": "Block Legacy Auth",
+    "currentValue": "State=enabledForReportingButNotEnforced; CreatedDateTime=2024-11-03T08:15:00Z; ModifiedDateTime=2024-11-03T08:15:00Z; IncludeUsers=all; ExcludeUsers=; IncludeApplications=All; GrantControls=blockLegacyAuthentication; SessionControls=",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Guest Exclusion",
+    "currentValue": "State=disabled; CreatedDateTime=2025-04-20T12:00:00Z; ModifiedDateTime=; IncludeUsers=; ExcludeUsers=cccccccc-cccc-4ccc-8ccc-cccccccccccc; IncludeApplications=00000000-0000-0000-0000-000000000001; GrantControls=mfa AND compliantDevice; SessionControls=AppEnforcedRestrictions",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Require MFA All Users",
+    "currentValue": "State=enabled; CreatedDateTime=2025-02-01T10:00:00Z; ModifiedDateTime=2025-06-11T09:30:00Z; IncludeUsers=all; ExcludeUsers=bob@contoso.com; IncludeApplications=All; GrantControls=mfa; SessionControls=SignInFrequency: 1 days",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

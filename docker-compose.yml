@@ -1,0 +1,38 @@
+services:
+  m365assess:
+    build:
+      # Repo-root context: the workspace install needs the root lockfile.
+      # See the build-context note in web/Dockerfile.
+      context: .
+      dockerfile: web/Dockerfile
+    # --- Example: direct port (no Traefik) ---
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      # Persistent SQLite storage (D-12): survives `docker compose down`
+      # (use `docker compose down -v` only to reset local data).
+      - web-data:/app/data
+    restart: unless-stopped
+    # healthcheck is in web/Dockerfile (node fetch http://127.0.0.1:3000/)
+
+  # --- Example: Traefik (uncomment to use, comment ports above) ---
+  # m365assess:
+  #   extends: m365assess
+  #   ports: []  # Traefik handles 80/443
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.m365assess.rule=Host(`assess.example.com`)"
+  #     - "traefik.http.routers.m365assess.entrypoints=websecure"
+  #     - "traefik.http.routers.m365assess.tls.certresolver=myresolver"
+  #     - "traefik.http.services.m365assess.loadbalancer.server.port=3000"
+  #   networks:
+  #     - traefik
+
+volumes:
+  web-data:
+
+# networks:
+#   traefik:
+#     external: true

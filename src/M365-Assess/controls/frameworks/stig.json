@@ -1,0 +1,42 @@
+{
+  "frameworkId": "stig",
+  "label": "DISA STIG",
+  "version": "M365",
+  "description": "Security Technical Implementation Guides — prescriptive DoD hardening configuration requirements for software, hardware, and operating systems used in US defense and federal environments.",
+  "homepageUrl": "https://public.cyber.mil/stigs/",
+  "css": "fw-stig",
+  "totalControls": 148,
+  "registryKey": "stig",
+  "csvColumn": "Stig",
+  "displayOrder": 5,
+  "scoring": {
+    "method": "severity-coverage",
+    "categories": {
+      "CAT-I": {
+        "label": "CAT I — High",
+        "description": "Vulnerabilities that allow an attacker to directly gain privileged access or bypass security"
+      },
+      "CAT-II": {
+        "label": "CAT II — Medium",
+        "description": "Vulnerabilities that provide information or capability that could lead to compromise"
+      },
+      "CAT-III": {
+        "label": "CAT III — Low",
+        "description": "Vulnerabilities that degrade security measures or provide limited exposure"
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "background": "#f3e8ff",
+      "color": "#6b21a8"
+    },
+    "dark": {
+      "background": "#3B0764",
+      "color": "#C4B5FD"
+    }
+  },
+  "controlIdFormat": "V-{number}",
+  "taxonomyDecision": "domain-fallback",
+  "taxonomyReason": "STIG rule IDs (V-NNNNNN) are opaque — they don't encode product, category, or severity. CAT-I/II/III severity is published in the STIG XCCDF XML but not carried per-check in the registry's framework mapping. Native taxonomy intentionally not provided; report falls back to M365-Assess domain breakdown. To enable: extend the registry to carry per-check STIG severity, or maintain a rule-ID → category lookup. See issue #845 + docs/SCORING.md."
+}

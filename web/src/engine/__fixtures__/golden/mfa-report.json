@@ -1,0 +1,32 @@
+[
+  {
+    "category": "MFA Registration",
+    "setting": "alice@contoso.com",
+    "currentValue": "UserDisplayName=Alice Anderson; IsMfaRegistered=True; IsMfaCapable=True; IsPasswordlessCapable=False; IsSsprRegistered=True; IsSsprCapable=True; MethodsRegistered=fido2; microsoftAuthenticatorPush; DefaultMfaMethod=push; MfaStrength=Phishing-Resistant; IsAdmin=True",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "MFA Registration",
+    "setting": "bob@contoso.com",
+    "currentValue": "UserDisplayName=Bob Brown; IsMfaRegistered=True; IsMfaCapable=True; IsPasswordlessCapable=False; IsSsprRegistered=False; IsSsprCapable=False; MethodsRegistered=mobilePhone; DefaultMfaMethod=phone; MfaStrength=Weak; IsAdmin=False",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "MFA Registration",
+    "setting": "carol@contoso.com",
+    "currentValue": "UserDisplayName=Carol Clark; IsMfaRegistered=False; IsMfaCapable=False; IsPasswordlessCapable=False; IsSsprRegistered=False; IsSsprCapable=False; MethodsRegistered=; DefaultMfaMethod=; MfaStrength=None; IsAdmin=False",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

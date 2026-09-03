@@ -1,0 +1,19 @@
+{
+  "value": [
+    {
+      "id": "u1",
+      "displayName": "Alice Admin",
+      "userPrincipalName": "alice@contoso.com"
+    },
+    {
+      "id": "u4",
+      "displayName": "Bob OnPrem",
+      "userPrincipalName": "bob@contoso.com"
+    },
+    {
+      "id": "u5",
+      "displayName": "Pim Only",
+      "userPrincipalName": "pimonly@contoso.com"
+    }
+  ]
+}

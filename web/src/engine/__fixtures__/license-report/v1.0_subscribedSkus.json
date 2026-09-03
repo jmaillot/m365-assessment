@@ -1,0 +1,67 @@
+{
+  "value": [
+    {
+      "id": "sku_1",
+      "skuId": "6fd2c87f-b296-42f0-b197-1e91e994b900",
+      "skuPartNumber": "ENTERPRISEPACK",
+      "consumedUnits": 20,
+      "prepaidUnits": { "enabled": 25, "suspended": 0, "warning": 0 },
+      "servicePlans": [
+        {
+          "servicePlanId": "efb87545-963c-4e0d-99df-69c6916d9eb0",
+          "serviceName": "EXCHANGE_S_ENTERPRISE",
+          "provisioningStatus": "Success"
+        },
+        {
+          "servicePlanId": "5dbe027f-2339-4123-9542-606e4d348a72",
+          "serviceName": "SHAREPOINTSTANDARD",
+          "provisioningStatus": "Success"
+        }
+      ]
+    },
+    {
+      "id": "sku_2",
+      "skuId": "c7df2760-2c81-4ef7-b578-5b5392b571df",
+      "skuPartNumber": "SPE_E3",
+      "consumedUnits": 10,
+      "prepaidUnits": { "enabled": 10, "suspended": 1, "warning": 2 },
+      "servicePlans": [
+        {
+          "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02",
+          "serviceName": "MESH_AVATARS_FOR_TEAMS",
+          "provisioningStatus": "Success"
+        }
+      ]
+    },
+    {
+      "id": "sku_3",
+      "skuId": "078d2b04-f1bd-4111-bbd4-b4b1b354cef4",
+      "skuPartNumber": "AAD_PREMIUM_P2",
+      "consumedUnits": 2,
+      "prepaidUnits": { "enabled": 2, "suspended": 0, "warning": 0 },
+      "servicePlans": [
+        {
+          "servicePlanId": "0818ceb5-2266-40f3-9e15-d2db70b03a5a",
+          "serviceName": "AAD_PREMIUM_P2",
+          "provisioningStatus": "Success"
+        }
+      ]
+    },
+    {
+      "id": "sku_4",
+      "skuId": "f8a1db68-be16-40ed-86d5-cb42ce701560",
+      "skuPartNumber": "POWER_BI_PRO",
+      "consumedUnits": 3,
+      "prepaidUnits": { "enabled": 5, "suspended": 1, "warning": 1 },
+      "servicePlans": []
+    },
+    {
+      "id": "sku_5",
+      "skuId": "99999999-1111-4000-8000-00000000abc1",
+      "skuPartNumber": "CONTOSO_ADDON",
+      "consumedUnits": 7,
+      "prepaidUnits": { "enabled": 100, "suspended": 0, "warning": 0 },
+      "servicePlans": []
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryRoles",
+  "value": [
+    { "id": "role-2", "displayName": "User Administrator", "roleTemplateId": "tpl-2", "deletedDateTime": null },
+    { "id": "role-1", "displayName": "Global Administrator", "roleTemplateId": "tpl-1", "deletedDateTime": null }
+  ]
+}

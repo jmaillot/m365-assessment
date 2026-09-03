@@ -1,0 +1,9 @@
+{
+  "value": [
+    {
+      "id": "d1bbbbbb-0000-4000-8000-000000000001",
+      "displayName": "Guest-Dynamic",
+      "membershipRule": "user.userType -eq \"Guest\""
+    }
+  ]
+}

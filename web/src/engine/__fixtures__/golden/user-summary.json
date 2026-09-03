@@ -1,0 +1,12 @@
+[
+  {
+    "category": "User Summary",
+    "setting": "Aggregate Counts",
+    "currentValue": "TotalUsers=3; Licensed=1; GuestUsers=1; DisabledUsers=1; SyncedFromOnPrem=1; CloudOnly=2; WithMFA=2; NeverSignedIn=1; StaleMember=1",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

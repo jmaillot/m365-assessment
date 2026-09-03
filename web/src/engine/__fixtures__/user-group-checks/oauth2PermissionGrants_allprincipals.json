@@ -1,0 +1,22 @@
+{
+  "value": [
+    {
+      "id": "g1bbbbbb-0000-4000-8000-000000000001",
+      "clientId": "c1bbbbbb-0000-4000-8000-000000000001",
+      "consentType": "AllPrincipals",
+      "scope": "User.Read.All"
+    },
+    {
+      "id": "g2bbbbbb-0000-4000-8000-000000000002",
+      "clientId": "c2bbbbbb-0000-4000-8000-000000000002",
+      "consentType": "AllPrincipals",
+      "scope": "Files.Read.All"
+    },
+    {
+      "id": "g3bbbbbb-0000-4000-8000-000000000003",
+      "clientId": "c3bbbbbb-0000-4000-8000-000000000003",
+      "consentType": "AllPrincipals",
+      "scope": "Mail.Read"
+    }
+  ]
+}

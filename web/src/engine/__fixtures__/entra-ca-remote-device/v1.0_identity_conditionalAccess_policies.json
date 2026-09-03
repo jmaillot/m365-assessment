@@ -1,0 +1,38 @@
+{
+  "value": [
+    {
+      "id": "ca-disabled",
+      "displayName": "Disabled compliant device policy",
+      "state": "disabled",
+      "grantControls": { "builtInControls": ["compliantDevice"] },
+      "conditions": {
+        "locations": { "excludeLocations": ["corp-loc-1"] }
+      }
+    },
+    {
+      "id": "ca-no-exclusion",
+      "displayName": "Compliant device without location exclusion",
+      "state": "enabled",
+      "grantControls": { "builtInControls": ["compliantDevice"] },
+      "conditions": { "locations": {} }
+    },
+    {
+      "id": "ca-report-only",
+      "displayName": "Report-only compliant device policy",
+      "state": "enabledForReportingButNotEnforced",
+      "grantControls": { "builtInControls": ["compliantDevice", "mfa"] },
+      "conditions": {
+        "locations": { "excludeLocations": ["corp-loc-1", "corp-loc-2"] }
+      }
+    },
+    {
+      "id": "ca-pass",
+      "displayName": "Require compliant device for remote access",
+      "state": "enabled",
+      "grantControls": { "builtInControls": ["compliantDevice"] },
+      "conditions": {
+        "locations": { "excludeLocations": ["AllAdminAndCorporate"] }
+      }
+    }
+  ]
+}

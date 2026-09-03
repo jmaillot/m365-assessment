@@ -1,0 +1,22 @@
+{
+  "value": [
+    {
+      "id": "u1",
+      "displayName": "Alice Admin",
+      "userPrincipalName": "alice@contoso.com",
+      "@odata.type": "#microsoft.graph.user"
+    },
+    {
+      "id": "u2",
+      "displayName": "Break-glass Account",
+      "userPrincipalName": "breakglass@contoso.com",
+      "@odata.type": "#microsoft.graph.user"
+    },
+    {
+      "id": "u3",
+      "displayName": "svc-emergency",
+      "userPrincipalName": "emergency-access@contoso.com",
+      "@odata.type": "#microsoft.graph.user"
+    }
+  ]
+}

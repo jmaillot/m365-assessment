@@ -1,0 +1,19 @@
+{
+  "value": [
+    {
+      "id": "contoso.com",
+      "isVerified": true,
+      "passwordValidityPeriodInDays": 2147483647
+    },
+    {
+      "id": "fabrikam.com",
+      "isVerified": true,
+      "passwordValidityPeriodInDays": 90
+    },
+    {
+      "id": "unverified-example.net",
+      "isVerified": false,
+      "passwordValidityPeriodInDays": 90
+    }
+  ]
+}

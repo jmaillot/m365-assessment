@@ -1,0 +1,9 @@
+{
+  "value": [
+    {
+      "userPrincipalName": "guest1@outlook.com",
+      "isMfaRegistered": false,
+      "isMfaCapable": false
+    }
+  ]
+}

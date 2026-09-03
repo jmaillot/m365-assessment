@@ -1,0 +1,102 @@
+[
+  {
+    "category": "Admin Accounts",
+    "setting": "Global Administrator Count",
+    "currentValue": "1 (excluding 2 break-glass)",
+    "recommendedValue": "2-4",
+    "status": "Fail",
+    "checkId": "ENTRA-ADMIN-001.1",
+    "remediation": "Run: Get-MgDirectoryRole -Filter \"displayName eq 'Global Administrator'\" | Get-MgDirectoryRoleMember. Maintain 2-4 global admins using dedicated accounts (break-glass accounts are excluded from this count).",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "PIM Manages Privileged Roles",
+    "currentValue": "2 permanent (non-PIM-eligible) GA assignment(s): alice@contoso.com, bob@contoso.com",
+    "recommendedValue": "No permanent Global Admin assignments (all GAs PIM-eligible only)",
+    "status": "Fail",
+    "checkId": "ENTRA-PIM-001.1",
+    "remediation": "Entra admin center > Identity Governance > Privileged Identity Management > Microsoft Entra roles > Global Administrator > Remove permanent active assignments. Use eligible assignments with time-bound activation. Requires Entra ID P2 (included in M365 E5).",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "Access Reviews for Guest Users",
+    "currentValue": "1 guest access review(s) configured",
+    "recommendedValue": "At least 1 access review for guests",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-002.1",
+    "remediation": "Entra admin center > Identity Governance > Access reviews > New access review > Review type: Guest users only. Schedule recurring reviews.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "Access Reviews for Privileged Roles",
+    "currentValue": "1 privileged role review(s) configured",
+    "recommendedValue": "At least 1 access review for admin roles",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-003.1",
+    "remediation": "Entra admin center > Identity Governance > Access reviews > New access review > Review type: Members of a group or Users assigned to a privileged role.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "GA Activation Requires Approval",
+    "currentValue": "Yes",
+    "recommendedValue": "Yes",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-004.1",
+    "remediation": "Entra admin center > Identity Governance > PIM > Microsoft Entra roles > Settings > Global Administrator > Require approval to activate > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "PRA Activation Requires Approval",
+    "currentValue": "No",
+    "recommendedValue": "Yes",
+    "status": "Fail",
+    "checkId": "ENTRA-PIM-005.1",
+    "remediation": "Entra admin center > Identity Governance > PIM > Microsoft Entra roles > Settings > Privileged Role Administrator > Require approval to activate > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Cloud-Only Global Admins",
+    "currentValue": "1 synced: Bob OnPrem",
+    "recommendedValue": "All admin accounts cloud-only",
+    "status": "Fail",
+    "checkId": "ENTRA-CLOUDADMIN-001.1",
+    "remediation": "Create cloud-only admin accounts instead of using on-premises synced accounts. Entra admin center > Users > New user > Create user (cloud identity).",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Admin License Footprint",
+    "currentValue": "1 GA with productivity license: Alice Admin",
+    "recommendedValue": "Admins use minimal license (Entra P2 only)",
+    "status": "Warning",
+    "checkId": "ENTRA-CLOUDADMIN-002.1",
+    "remediation": "Assign admin accounts minimal licenses (Entra ID P2). Do not assign E3/E5 productivity suites. M365 admin center > Users > Active users > Licenses.",
+    "intentDesign": false
+  },
+  {
+    "category": "Access Control",
+    "setting": "Entra Admin Center Restricted",
+    "currentValue": "Property not available",
+    "recommendedValue": "True",
+    "status": "Review",
+    "checkId": "ENTRA-ADMIN-002.1",
+    "remediation": "Entra admin center > Identity > Users > User settings > Administration center > verify \"Restrict access to Microsoft Entra admin center\" is set to Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Admin MFA Method Strength",
+    "currentValue": "1 admin(s) without phishing-resistant MFA: Bob OnPrem",
+    "recommendedValue": "All admins use phishing-resistant MFA",
+    "status": "Warning",
+    "checkId": "ENTRA-ADMIN-004.1",
+    "remediation": "Upgrade admin MFA to phishing-resistant methods (FIDO2, Windows Hello for Business, or certificate-based). Standard MFA (push/TOTP) is vulnerable to adversary-in-the-middle attacks. Entra admin center > Protection > Authentication methods > Policies.",
+    "intentDesign": false
+  }
+]

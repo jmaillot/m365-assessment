@@ -1,0 +1,19 @@
+{
+  "name": "m365-assess-report",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build tooling for the M365-Assess React HTML report",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "build": "babel src/M365-Assess/assets/report-app.jsx --out-file src/M365-Assess/assets/report-app.js",
+    "dev:web": "npm run dev --workspace web",
+    "build:web": "npm run build --workspace web"
+  },
+  "devDependencies": {
+    "@babel/cli": "^8.0.1",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-react": "^8.0.1"
+  }
+}

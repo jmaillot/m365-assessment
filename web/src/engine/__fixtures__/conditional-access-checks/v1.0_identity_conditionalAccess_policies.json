@@ -1,0 +1,19 @@
+{
+  "value": [
+    {
+      "id": "p1",
+      "displayName": "Block Legacy",
+      "state": "enabled"
+    },
+    {
+      "id": "p2",
+      "displayName": "Require MFA",
+      "state": "enabled"
+    },
+    {
+      "id": "p3",
+      "displayName": "Report Only Baseline",
+      "state": "enabledForReportingButNotEnforced"
+    }
+  ]
+}

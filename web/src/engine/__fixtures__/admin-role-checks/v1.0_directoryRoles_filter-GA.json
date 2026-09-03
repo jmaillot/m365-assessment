@@ -1,0 +1,9 @@
+{
+  "value": [
+    {
+      "id": "role-1",
+      "displayName": "Global Administrator",
+      "roleTemplateId": "62e90394-69f5-4237-9190-012177145e10"
+    }
+  ]
+}

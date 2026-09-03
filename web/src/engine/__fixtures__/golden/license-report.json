@@ -1,0 +1,52 @@
+[
+  {
+    "category": "License Summary",
+    "setting": "CONTOSO_ADDON",
+    "currentValue": "License=CONTOSO_ADDON; SkuPartNumber=CONTOSO_ADDON; Total=100; Assigned=7; Available=93; Suspended=0; Warning=0",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "License Summary",
+    "setting": "Microsoft 365 E3",
+    "currentValue": "License=Microsoft 365 E3; SkuPartNumber=SPE_E3; Total=10; Assigned=10; Available=0; Suspended=1; Warning=2",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "License Summary",
+    "setting": "Microsoft Entra ID P2",
+    "currentValue": "License=Microsoft Entra ID P2; SkuPartNumber=AAD_PREMIUM_P2; Total=2; Assigned=2; Available=0; Suspended=0; Warning=0",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "License Summary",
+    "setting": "Office 365 E3",
+    "currentValue": "License=Office 365 E3; SkuPartNumber=ENTERPRISEPACK; Total=25; Assigned=20; Available=5; Suspended=0; Warning=0",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "License Summary",
+    "setting": "Power BI Pro",
+    "currentValue": "License=Power BI Pro; SkuPartNumber=POWER_BI_PRO; Total=5; Assigned=3; Available=2; Suspended=1; Warning=1",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

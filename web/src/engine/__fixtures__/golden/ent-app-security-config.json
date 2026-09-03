@@ -1,0 +1,242 @@
+[
+  {
+    "category": "Enterprise Applications",
+    "setting": "Apps with Client Credentials",
+    "currentValue": "4 enabled app(s) have secrets or certificates",
+    "recommendedValue": "Review all apps with credentials; remove unused",
+    "status": "Info",
+    "checkId": "ENTRA-ENTAPP-001.1",
+    "remediation": "Entra admin center > Enterprise applications > review each app with credentials. Remove secrets/certificates from apps that no longer need them.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Inactive Apps with Credentials",
+    "currentValue": "2 app(s) inactive > 90 days with credentials",
+    "recommendedValue": "Remove credentials from inactive apps",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-002.1",
+    "remediation": "Review the following inactive apps and remove their credentials or disable them: Entra admin center > Enterprise applications > filter by last sign-in > remove secrets/certificates.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Foreign Apps with Tier 0 Permissions (GA Escalation)",
+    "currentValue": "2 finding(s): Third Party App: Application.ReadWrite.All; Microsoft Graph Helper: Application.ReadWrite.All",
+    "recommendedValue": "No third-party apps should hold Tier 0 (Global Admin escalation) permissions",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-003.1",
+    "remediation": "Entra admin center > Enterprise applications > review third-party apps with Tier 0 permissions. These permissions have documented attack paths to Global Administrator. Remove or replace with least-privilege alternatives. Microsoft first-party apps are listed separately in the evidence and are expected to hold these permissions.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Foreign Apps with Tier 1 Permissions (Data Access)",
+    "currentValue": "1 finding(s): Third Party App: Mail.ReadWrite",
+    "recommendedValue": "Minimize third-party apps with broad data access permissions",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-011.1",
+    "remediation": "Entra admin center > Enterprise applications > review third-party apps with broad data access (Mail.ReadWrite, Files.ReadWrite.All, etc.). Scope to least-privilege or remove. Microsoft first-party apps are listed separately in the evidence.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Foreign Apps with Dangerous Delegated Permissions",
+    "currentValue": "2 finding(s): Third Party App: Directory.ReadWrite.All; Microsoft Graph Helper: Mail.ReadWrite",
+    "recommendedValue": "No third-party apps should hold dangerous delegated permissions",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-004.1",
+    "remediation": "Entra admin center > Enterprise applications > review third-party apps with high-privilege delegated permissions. Revoke admin consent or remove the app. Microsoft first-party apps are listed separately in the evidence.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Foreign Apps with Directory Roles",
+    "currentValue": "1 third-party app(s) with roles: Third Party App (1 role(s)) | 1 Microsoft first-party app(s) with roles (expected, not counted)",
+    "recommendedValue": "No third-party apps should hold Entra directory roles",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-005.1",
+    "remediation": "Entra admin center > Roles and administrators > review roles assigned to third-party service principals. Remove role assignments from untrusted external apps. Microsoft first-party apps are listed separately in the evidence.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Apps with Excessive Permissions",
+    "currentValue": "1 app(s): Perm Hoarder (11 permissions)",
+    "recommendedValue": "Apps should follow least-privilege (max 10 app permissions)",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-006.1",
+    "remediation": "Review apps with > 10 application permissions. Remove unnecessary permissions to follow least-privilege. Entra admin center > App registrations > API permissions.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "App Instance Property Lock",
+    "currentValue": "Default app management policy enabled",
+    "recommendedValue": "App management policy enabled to prevent property modifications by app owners",
+    "status": "Pass",
+    "checkId": "ENTRA-ENTAPP-007.1",
+    "remediation": "Entra admin center > Applications > App management policies > configure a default policy to lock sensitive properties on multi-tenant apps.",
+    "intentDesign": false
+  },
+  {
+    "category": "Managed Identities",
+    "setting": "Managed Identities with Dangerous Permissions",
+    "currentValue": "1 finding(s): Automation MI: Mail.ReadWrite",
+    "recommendedValue": "Managed identities should follow least-privilege",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-008.1",
+    "remediation": "Review managed identity permissions. Use narrower permissions (e.g., Mail.Read instead of Mail.ReadWrite). Azure portal > Managed Identity > API permissions.",
+    "intentDesign": false
+  },
+  {
+    "category": "Managed Identities",
+    "setting": "Managed Identities with Directory Roles",
+    "currentValue": "1 managed identity/ies with roles: Automation MI (1 role(s))",
+    "recommendedValue": "Managed identities should not hold Entra directory roles",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-009.1",
+    "remediation": "Review managed identities with directory roles. Use Graph API permissions instead of directory roles where possible. Entra admin center > Roles and administrators.",
+    "intentDesign": false
+  },
+  {
+    "category": "Enterprise Applications",
+    "setting": "Internal Apps with Tier 0 Permissions (GA Escalation)",
+    "currentValue": "1 finding(s): Internal App: Application.ReadWrite.All",
+    "recommendedValue": "Minimize internal apps with Tier 0 permissions; use least-privilege",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-010.1",
+    "remediation": "Entra admin center > App registrations > review internal apps with Tier 0 permissions. Each has a documented path to Global Administrator. Replace with narrower permissions or use managed identities where possible.",
+    "intentDesign": false
+  },
+  {
+    "category": "Credential Hygiene",
+    "setting": "Apps Using Secrets Instead of Certificates",
+    "currentValue": "3 app(s): Third Party App; Expired Cred App; Internal App",
+    "recommendedValue": "Use certificates or managed identities instead of client secrets",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-012.1",
+    "remediation": "Migrate app credentials from client secrets to certificates or managed identities. Secrets are extractable from memory and logs. Entra admin center > App registrations > Certificates & secrets.",
+    "intentDesign": false
+  },
+  {
+    "category": "Credential Hygiene",
+    "setting": "Apps with Expired Credentials",
+    "currentValue": "1 app(s): Expired Cred App",
+    "recommendedValue": "Remove expired credentials from all app registrations",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-013.1",
+    "remediation": "Remove expired credentials. Expired secrets/certs are attack surface -- they indicate poor credential lifecycle management. Entra admin center > App registrations > Certificates & secrets.",
+    "intentDesign": false
+  },
+  {
+    "category": "Credential Hygiene",
+    "setting": "Apps with Both Secrets and Certificates",
+    "currentValue": "1 app(s): Dual Cred App",
+    "recommendedValue": "Use a single credential type per app (prefer certificates)",
+    "status": "Info",
+    "checkId": "ENTRA-ENTAPP-014.1",
+    "remediation": "Remove the client secret if a certificate is also configured. Dual credential types widen the attack surface. Entra admin center > App registrations > Certificates & secrets.",
+    "intentDesign": false
+  },
+  {
+    "category": "Credential Hygiene",
+    "setting": "SPs with Secret + Permanent Directory Role",
+    "currentValue": "2 SP(s): Third Party App (1 role(s)); Internal App (2 role(s))",
+    "recommendedValue": "Privileged SPs should use certificates, not secrets",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-015.1",
+    "remediation": "Migrate privileged service principals from client secrets to certificates or managed identities. A secret on a permanently privileged SP is a persistent backdoor risk.",
+    "intentDesign": false
+  },
+  {
+    "category": "Owner Risk",
+    "setting": "Tier 0 Apps with Owners Assigned",
+    "currentValue": "2 app(s): Third Party App (owners: Owner One); Microsoft Graph Helper (owners: Imp Owner)",
+    "recommendedValue": "Tier 0 apps should not have owners (owners can add credentials and impersonate)",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-016.1",
+    "remediation": "Remove owners from apps with Tier 0 permissions. An owner of a Tier 0 app can add credentials and impersonate it to escalate to Global Admin. Entra admin center > App registrations > Owners.",
+    "intentDesign": false
+  },
+  {
+    "category": "Owner Risk",
+    "setting": "Role-Holding Apps with Owners",
+    "currentValue": "1 app(s): Third Party App (owners: Owner One)",
+    "recommendedValue": "Apps with directory roles should not have owners",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-017.1",
+    "remediation": "Remove owners from apps holding Entra directory roles. Owners can add credentials and impersonate the SP to exercise those roles. Entra admin center > App registrations > Owners.",
+    "intentDesign": false
+  },
+  {
+    "category": "Owner Risk",
+    "setting": "Credentialed Apps with No Owners",
+    "currentValue": "3 orphaned app(s): Expired Cred App; Internal App; Disabled Internal",
+    "recommendedValue": "All apps with credentials should have at least one owner for accountability",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-018.1",
+    "remediation": "Assign owners to orphaned app registrations. Without owners, no one is accountable for credential rotation or permission review. Entra admin center > App registrations > Owners > Add owner.",
+    "intentDesign": false
+  },
+  {
+    "category": "Permission Hygiene",
+    "setting": "Tier 0 Apps with No Sign-In Activity",
+    "currentValue": "3 app(s) with Tier 0 perms and no sign-in: Third Party App; Microsoft Graph Helper; Internal App",
+    "recommendedValue": "Remove Tier 0 permissions from apps that never use them",
+    "status": "Warning",
+    "checkId": "ENTRA-ENTAPP-019.1",
+    "remediation": "Review apps with Tier 0 permissions that show no sign-in activity. These permissions may have been granted but never used -- remove them to reduce attack surface. Entra admin center > Enterprise applications > Sign-in logs.",
+    "intentDesign": false
+  },
+  {
+    "category": "App Registration Security",
+    "setting": "Apps with Localhost Redirect URIs",
+    "currentValue": "3 app(s): Localhost App; Public Client App; IPv6 Local",
+    "recommendedValue": "Remove localhost redirect URIs from production apps",
+    "status": "Warning",
+    "checkId": "ENTRA-APPREG-002.1",
+    "remediation": "Remove localhost redirect URIs from production app registrations. In shared environments, tokens redirected to localhost can be intercepted. Entra admin center > App registrations > Authentication.",
+    "intentDesign": false
+  },
+  {
+    "category": "App Registration Security",
+    "setting": "Apps with HTTP (Non-HTTPS) Redirect URIs",
+    "currentValue": "1 app(s): Webby App",
+    "recommendedValue": "All redirect URIs should use HTTPS",
+    "status": "Fail",
+    "checkId": "ENTRA-APPREG-003.1",
+    "remediation": "Update HTTP redirect URIs to HTTPS. Non-HTTPS URIs allow token interception via MITM attacks. Entra admin center > App registrations > Authentication.",
+    "intentDesign": false
+  },
+  {
+    "category": "App Registration Security",
+    "setting": "Apps with Wildcard Redirect URIs",
+    "currentValue": "1 app(s): Wildcard App",
+    "recommendedValue": "Avoid wildcard redirect URIs",
+    "status": "Fail",
+    "checkId": "ENTRA-APPREG-004.1",
+    "remediation": "Replace wildcard redirect URIs with explicit URIs. Wildcards enable open redirect attacks for token theft. Entra admin center > App registrations > Authentication.",
+    "intentDesign": false
+  },
+  {
+    "category": "App Registration Security",
+    "setting": "Foreign Apps Impersonating Microsoft Names",
+    "currentValue": "1 app(s): Microsoft Graph Helper (AppId: 44444444-4444-4000-8000-444444444444)",
+    "recommendedValue": "No foreign apps should use Microsoft product names",
+    "status": "Fail",
+    "checkId": "ENTRA-ENTAPP-020.1",
+    "remediation": "Investigate foreign apps using Microsoft product names -- they may be social engineering attempts. Verify the publisher and appId against known Microsoft first-party apps. Remove if suspicious.",
+    "intentDesign": false
+  },
+  {
+    "category": "App Registration Security",
+    "setting": "Multi-Tenant App Registrations",
+    "currentValue": "1 app(s): Multitenant App (AzureADMultipleOrgs)",
+    "recommendedValue": "Use single-tenant (AzureADMyOrg) unless external access is required",
+    "status": "Info",
+    "checkId": "ENTRA-ENTAPP-021.1",
+    "remediation": "Review multi-tenant apps and restrict to AzureADMyOrg if they do not need cross-tenant access. Multi-tenant apps can be accessed by users from any Entra ID tenant. Entra admin center > App registrations > Authentication > Supported account types.",
+    "intentDesign": false
+  }
+]

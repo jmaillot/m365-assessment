@@ -1,0 +1,21 @@
+{
+  "value": [
+    {
+      "id": "lic1bbbbbb-0000-4000-8000-000000000001",
+      "skuId": "05e9a617-0261-4cee-bb44-138d3ef5d965",
+      "skuPartNumber": "SPE_E3",
+      "servicePlans": [
+        {
+          "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02",
+          "serviceName": "MESH_AVATARS_FOR_TEAMS",
+          "provisioningStatus": "Success"
+        },
+        {
+          "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90",
+          "serviceName": "RMS_S_ENTERPRISE",
+          "provisioningStatus": "Success"
+        }
+      ]
+    }
+  ]
+}

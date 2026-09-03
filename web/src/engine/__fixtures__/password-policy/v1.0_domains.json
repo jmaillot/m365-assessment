@@ -1,0 +1,22 @@
+{
+  "value": [
+    {
+      "id": "contoso.com",
+      "isDefault": true,
+      "passwordValidityPeriodInDays": 90,
+      "passwordNotificationWindowInDays": 14
+    },
+    {
+      "id": "contoso.onmicrosoft.com",
+      "isDefault": false,
+      "passwordValidityPeriodInDays": 214,
+      "passwordNotificationWindowInDays": 30
+    },
+    {
+      "id": "partner.fabrikam.com",
+      "isDefault": false,
+      "passwordValidityPeriodInDays": 90,
+      "passwordNotificationWindowInDays": 7
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "category": "Device Enrollment",
+    "setting": "Personal Device Enrollment Blocked",
+    "currentValue": "Blocked on all platforms",
+    "recommendedValue": "Block personal device enrollment",
+    "status": "Pass",
+    "checkId": "INTUNE-ENROLL-001.1",
+    "remediation": "Portal: Intune admin center > Devices > Enrollment > Device platform restrictions > Edit default policy > Block personally owned devices for each platform",
+    "intentDesign": false,
+    "evidenceSource": "/beta/deviceManagement/deviceEnrollmentConfigurations",
+    "collectionMethod": "Direct",
+    "permissionRequired": "DeviceManagementConfiguration.Read.All",
+    "provenance": "/beta/deviceManagement/deviceEnrollmentConfigurations"
+  }
+]

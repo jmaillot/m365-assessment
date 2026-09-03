@@ -1,0 +1,54 @@
+{
+  "frameworkId": "iso-27001",
+  "label": "ISO/IEC 27001:2022",
+  "version": "2022",
+  "description": "International standard for information security management systems (ISMS). Specifies requirements for establishing, implementing, maintaining, and continually improving organizational information security.",
+  "homepageUrl": "https://www.iso.org/standard/27001",
+  "css": "fw-iso",
+  "totalControls": 93,
+  "registryKey": "iso-27001",
+  "csvColumn": "Iso27001",
+  "displayOrder": 4,
+  "scoring": {
+    "method": "control-coverage",
+    "themes": {
+      "5": {
+        "label": "Organizational Controls",
+        "controlCount": 37
+      },
+      "6": {
+        "label": "People Controls",
+        "controlCount": 8
+      },
+      "7": {
+        "label": "Physical Controls",
+        "controlCount": 14
+      },
+      "8": {
+        "label": "Technological Controls",
+        "controlCount": 34
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "background": "#ecfdf5",
+      "color": "#065f46"
+    },
+    "dark": {
+      "background": "#064E3B",
+      "color": "#6EE7B7"
+    }
+  },
+  "groupBy": "section-prefix",
+  "groupLabel": "clause",
+  "groups": {
+    "4": "Context of the Organization",
+    "5": "Organizational Controls (A.5)",
+    "6": "People Controls (A.6)",
+    "7": "Physical Controls (A.7)",
+    "8": "Technological Controls (A.8)",
+    "9": "Performance Evaluation",
+    "10": "Improvement"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "value": [
+    {
+      "displayName": "Alice Admin",
+      "userPrincipalName": "alice@contoso.com",
+      "onPremisesSyncEnabled": false
+    },
+    {
+      "displayName": "Bob OnPrem",
+      "userPrincipalName": "bob@contoso.com",
+      "onPremisesSyncEnabled": true
+    }
+  ]
+}

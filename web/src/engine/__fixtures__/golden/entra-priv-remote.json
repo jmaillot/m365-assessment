@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Privileged Remote Access",
+    "setting": "PIM Required for Global Admin Activation",
+    "currentValue": "Permanent: 2, Eligible (PIM): 3",
+    "recommendedValue": "PIM enabled with eligible assignments; max 2 permanent (break-glass)",
+    "status": "Pass",
+    "checkId": "ENTRA-PRIVREMOTE-001.1",
+    "remediation": "Enable Entra ID PIM. Convert permanent role assignments to eligible. Configure activation to require justification and MFA. Entra admin center > Identity Governance > Privileged Identity Management > Entra ID roles.",
+    "intentDesign": false
+  }
+]

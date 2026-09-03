@@ -1,0 +1,32 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(id,displayName,userPrincipalName,userType,accountEnabled,assignedLicenses,onPremisesSyncEnabled)",
+  "value": [
+    {
+      "id": "u1",
+      "displayName": "Alice Anderson",
+      "userPrincipalName": "alice@contoso.com",
+      "userType": "Member",
+      "accountEnabled": true,
+      "assignedLicenses": [{ "disabledPlans": [], "skuId": "c7df2760-2c81-4ef7-b578-5b5392b571df" }],
+      "onPremisesSyncEnabled": true
+    },
+    {
+      "id": "u2",
+      "displayName": "Bob Brown",
+      "userPrincipalName": "bob@contoso.com",
+      "userType": "Member",
+      "accountEnabled": true,
+      "assignedLicenses": [],
+      "onPremisesSyncEnabled": null
+    },
+    {
+      "id": "u3",
+      "displayName": "Carol Clark",
+      "userPrincipalName": "carol@contoso.com",
+      "userType": "Guest",
+      "accountEnabled": false,
+      "assignedLicenses": [],
+      "onPremisesSyncEnabled": false
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# Example override for Traefik — copy to docker-compose.override.yml or merge into docker-compose.yml
+# Usage: docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d
+services:
+  m365assess:
+    ports: [] # Traefik exposes 80/443
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.m365assess.rule=Host(`assess.example.com`)"
+      - "traefik.http.routers.m365assess.entrypoints=websecure"
+      - "traefik.http.routers.m365assess.tls.certresolver=myresolver"
+      - "traefik.http.services.m365assess.loadbalancer.server.port=3000"
+      - "traefik.http.routers.m365assess.middlewares=secHeaders@file"
+    networks:
+      - traefik
+    # ensure APP_BASE_URL in .env matches the Host: https://assess.example.com
+    # and Entra redirect URIs: https://assess.example.com/api/auth/callback + /api/tenant/callback
+
+networks:
+  traefik:
+    external: true

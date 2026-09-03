@@ -1,0 +1,30 @@
+{
+  "value": [
+    {
+      "capabilityStatus": "Enabled",
+      "skuId": "c7df2760-2c81-4ef7-b578-5b5392b571df",
+      "skuPartNumber": "ENTERPRISEPREMIUM",
+      "servicePlans": [
+        {
+          "servicePlanId": "eec0eb4f-6444-4f95-aba0-50c24d67f998",
+          "provisioningStatus": "Success"
+        },
+        {
+          "servicePlanId": "43de0ff5-c92c-492b-9116-175376d08f38",
+          "provisioningStatus": "Success"
+        }
+      ]
+    },
+    {
+      "capabilityStatus": "Enabled",
+      "skuId": "05e9a617-0261-4cee-bb36-b42c3d50e6a0",
+      "skuPartNumber": "SPE_E3",
+      "servicePlans": [
+        {
+          "servicePlanId": "eec0eb4f-6444-4f95-aba0-50c24d67f998",
+          "provisioningStatus": "Success"
+        }
+      ]
+    }
+  ]
+}
