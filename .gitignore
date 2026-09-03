@@ -56,3 +56,6 @@ SecFrame/
 # Large PDF — keep locally, not in public repo (framework JSON already committed)
 CIS_*.pdf
 CIS_Microsoft_365*.pdf
+
+# PS report build — not needed for Docker minimal (web uses Next.js)
+babel.config.json
