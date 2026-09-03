@@ -1,0 +1,10 @@
+{
+  "value": [
+    {
+      "id": "aa2bbbbbb-0000-4000-8000-000000000001",
+      "roleDefinitionId": "e8611ab8-c189-46e8-94e1-60213ab1f814",
+      "principalId": "33333333-3333-4000-8000-000000000003",
+      "directoryScopeId": "/"
+    }
+  ]
+}

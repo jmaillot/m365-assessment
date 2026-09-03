@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Remote Access",
+    "setting": "CA Policy: Compliant Device Required for Remote Access",
+    "currentValue": "Enabled: 'Require compliant device for remote access' requires compliantDevice with named location exclusion",
+    "recommendedValue": "Enabled CA policy requiring compliantDevice grant with at least one named location excluded",
+    "status": "Pass",
+    "checkId": "CA-REMOTEDEVICE-001.1",
+    "remediation": "Verify the CA policy is scoped to all users and targets remote access scenarios.",
+    "intentDesign": false
+  }
+]

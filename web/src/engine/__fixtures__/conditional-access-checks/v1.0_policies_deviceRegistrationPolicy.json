@@ -1,0 +1,19 @@
+{
+  "id": "deviceRegistrationPolicy",
+  "displayName": "Device Registration Policy",
+  "azureADJoin": {
+    "isAdminConfigurable": true,
+    "allowedToJoin": {
+      "@odata.type": "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+    },
+    "localAdmins": {
+      "enableGlobalAdmins": true,
+      "registeredUsers": {
+        "@odata.type": "#microsoft.graph.enumeratedDeviceRegistrationMembership",
+        "additionalLocalAdminsCount": 2
+      }
+    }
+  },
+  "localAdminPassword": { "isEnabled": false },
+  "userDeviceQuota": 20
+}

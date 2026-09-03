@@ -1,0 +1,58 @@
+[
+  {
+    "category": "Anti-Phishing",
+    "setting": "Policy (Default)",
+    "currentValue": "Managed by preset security policy",
+    "recommendedValue": "Preset security policy active",
+    "status": "Pass",
+    "checkId": "DEFENDER-ANTIPHISH-001.1",
+    "remediation": "No action needed -- settings enforced by preset security policy.",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScoreControlProfiles?$top=250",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All",
+    "confidence": 1
+  },
+  {
+    "category": "Anti-Spam",
+    "setting": "Bulk Complaint Level Threshold (Default)",
+    "currentValue": "Not configured",
+    "recommendedValue": "6 or lower",
+    "status": "Warning",
+    "checkId": "DEFENDER-ANTISPAM-001.1",
+    "remediation": "No action needed -- settings enforced by preset security policy",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScoreControlProfiles?$top=250",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All",
+    "confidence": 0.9
+  },
+  {
+    "category": "Safe Links",
+    "setting": "Safe Links Policies",
+    "currentValue": "No Safe Links policy configured — review",
+    "recommendedValue": "At least 1 policy",
+    "status": "Warning",
+    "checkId": "DEFENDER-SAFELINKS-001.1",
+    "remediation": "Portal: Security admin center > Safe Links > Create a policy covering all users PowerShell: New-SafeLinksPolicy -Name \"Safe Links\" -IsEnabled $true; New-SafeLinksRule -Name \"Safe Links\" -SafeLinksPolicy \"Safe Links\" -RecipientDomainIs (Get-AcceptedDomain).Name",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScoreControlProfiles?$top=250",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All",
+    "confidence": 0.8
+  },
+  {
+    "category": "Safe Attachments",
+    "setting": "Safe Attachments Policies",
+    "currentValue": "None configured",
+    "recommendedValue": "At least 1 policy",
+    "status": "Warning",
+    "checkId": "DEFENDER-SAFEATTACH-001.1",
+    "remediation": "Portal: Security admin center > Safe Attachments > Create a policy covering all users PowerShell: New-SafeAttachmentPolicy -Name \"Safe Attachments\" -Enable $true -Action Block; New-SafeAttachmentRule -Name \"Safe Attachments\" -SafeAttachmentPolicy \"Safe Attachments\" -RecipientDomainIs (Get-AcceptedDomain).Name",
+    "intentDesign": false,
+    "evidenceSource": "/v1.0/security/secureScoreControlProfiles?$top=250",
+    "collectionMethod": "Direct",
+    "permissionRequired": "SecurityEvents.Read.All",
+    "confidence": 0.8
+  }
+]

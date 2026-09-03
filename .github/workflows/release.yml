@@ -1,0 +1,138 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (skip PSGallery publish)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    name: Pre-publish Validation
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install modules
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -Force -Scope CurrentUser -MinimumVersion 5.0.0
+
+      - name: Validate manifest
+        shell: pwsh
+        run: |
+          $manifest = Test-ModuleManifest -Path ./src/M365-Assess/M365-Assess.psd1 -ErrorAction Stop
+          Write-Host "Module: $($manifest.Name) v$($manifest.Version)" -ForegroundColor Green
+
+      - name: Verify tag matches manifest version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}".TrimStart('v')
+          $manifest = (Import-PowerShellDataFile ./src/M365-Assess/M365-Assess.psd1).ModuleVersion
+          if ($tag -ne $manifest) {
+            Write-Error "Tag version ($tag) does not match manifest version ($manifest)"
+            exit 1
+          }
+          Write-Host "Version match: $tag" -ForegroundColor Green
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests'
+          $config.Run.Exit = $true
+          $config.Output.Verbosity = 'Detailed'
+          Invoke-Pester -Configuration $config
+
+  create-release:
+    needs: validate
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog section
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Strip 'v' prefix for changelog matching
+          SEMVER="${VERSION#v}"
+          # Extract the section between this version header and the next
+          NOTES=$(awk "/^## \\[${SEMVER}\\]/{found=1;next} /^## \\[/{if(found)exit} found{print}" CHANGELOG.md)
+          if [ -z "$NOTES" ]; then
+            NOTES="Release ${VERSION}"
+          fi
+          # Use EOF delimiter for multiline
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ steps.version.outputs.version }}
+          body: ${{ steps.changelog.outputs.notes }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+
+  publish:
+    needs: [validate, create-release]
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-')
+    runs-on: ubuntu-latest
+    environment: psgallery
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install image optimizer
+        run: sudo apt-get install -y optipng
+
+      - name: Compress PNG assets
+        run: |
+          optipng -o3 -strip all src/M365-Assess/assets/*.png
+          echo "PNG sizes after optimization:"
+          du -sh src/M365-Assess/assets/*.png
+
+      - name: Minify JSON data files
+        run: |
+          python3 -c "
+          import json, glob
+          for p in glob.glob('src/M365-Assess/controls/**/*.json', recursive=True):
+              with open(p, 'rb') as f: raw = f.read()
+              try:
+                  content = raw.decode('utf-8-sig')
+              except UnicodeDecodeError:
+                  content = raw.decode('latin-1')
+              data = json.loads(content)
+              with open(p, 'w', encoding='utf-8') as f: json.dump(data, f, separators=(',',':'))
+          print('JSON files minified')
+          "
+
+      - name: Publish to PSGallery
+        if: ${{ !inputs.dry_run }}
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          Write-Host "Publishing M365-Assess to PSGallery..." -ForegroundColor Cyan
+          Publish-Module -Path ./src/M365-Assess -NuGetApiKey $env:NUGET_API_KEY -Verbose
+          Write-Host "Published successfully" -ForegroundColor Green
+
+      - name: Dry run
+        if: ${{ inputs.dry_run }}
+        shell: pwsh
+        run: |
+          Write-Host "DRY RUN — skipping PSGallery publish" -ForegroundColor Yellow
+          Test-ModuleManifest -Path ./src/M365-Assess/M365-Assess.psd1 | Format-List Name, Version, Description
+          Write-Host "Module would be published with the above metadata" -ForegroundColor Yellow

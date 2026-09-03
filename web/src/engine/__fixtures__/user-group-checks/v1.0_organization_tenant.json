@@ -1,0 +1,9 @@
+{
+  "id": "00000000-0000-4000-8000-000000000000",
+  "verifiedDomains": [
+    { "name": "contoso.com", "isDefault": true, "isInitial": false }
+  ],
+  "linkedInConfiguration": {
+    "isDisabled": true
+  }
+}

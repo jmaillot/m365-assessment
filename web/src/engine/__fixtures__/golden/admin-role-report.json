@@ -1,0 +1,22 @@
+[
+  {
+    "category": "Admin Roles",
+    "setting": "Global Administrator",
+    "currentValue": "RoleId=role-1; MemberDisplayName=Alice Anderson; MemberUPN=alice@contoso.com; MemberType=User; MemberId=u1; OnPremisesSyncEnabled=True",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Roles",
+    "setting": "Global Administrator",
+    "currentValue": "RoleId=role-1; MemberDisplayName=Backup Bot; MemberUPN=; MemberType=ServicePrincipal; MemberId=sp-1; OnPremisesSyncEnabled=",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

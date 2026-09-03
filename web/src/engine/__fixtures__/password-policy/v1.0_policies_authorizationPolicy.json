@@ -1,0 +1,6 @@
+{
+  "id": "authorizationPolicy",
+  "allowEmailVerifiedUsersToJoinOrganization": true,
+  "allowedToUseSSPR": true,
+  "allowedToSignUpEmailBasedSubscriptions": true
+}

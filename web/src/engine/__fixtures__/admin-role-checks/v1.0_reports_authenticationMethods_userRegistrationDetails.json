@@ -1,0 +1,22 @@
+{
+  "value": [
+    {
+      "id": "u1",
+      "userDisplayName": "Alice Admin",
+      "isMfaRegistered": true,
+      "methodsRegistered": ["fido2"]
+    },
+    {
+      "id": "u4",
+      "userDisplayName": "Bob OnPrem",
+      "isMfaRegistered": true,
+      "methodsRegistered": ["mobilePhone"]
+    },
+    {
+      "id": "u9",
+      "userDisplayName": "Not An Admin",
+      "isMfaRegistered": false,
+      "methodsRegistered": ["email"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "Frameworks": [
+    { "Id": "cis-controls-v8", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "cis-m365-v6", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "cisa-scuba", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "cmmc", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "essential-eight", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "fedramp", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "hipaa", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "iso-27001", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "iso-27002", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "mitre-attack", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "nist-800-53-r5", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "nist-csf", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "pci-dss-v4", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "soc2-tsc", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 },
+    { "Id": "stig", "Score": 80, "ControlsCovered": 8, "ControlsTotal": 10 }
+  ],
+  "Findings": [
+    { "CheckId": "ENTRA-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "DEFENDER-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "INTUNE-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "EXO-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "SPO-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "TEAMS-TEST-001.1", "Status": "Fail" },
+    { "CheckId": "PURVIEW-TEST-001.1", "Status": "Pass" },
+    { "CheckId": "POWERBI-GUEST-001.1", "Status": "Pass" },
+    { "CheckId": "INVENTORY-TEST-001.1", "Status": "Pass" }
+  ]
+}

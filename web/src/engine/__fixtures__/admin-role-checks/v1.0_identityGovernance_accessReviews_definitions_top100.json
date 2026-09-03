@@ -1,0 +1,28 @@
+{
+  "value": [
+    {
+      "id": "ar-user-review",
+      "displayName": "Quarterly user access",
+      "scope": {
+        "query": "/users",
+        "@odata.type": "#microsoft.graph.accessReviewQueryScope"
+      }
+    },
+    {
+      "id": "ar-guest-review",
+      "displayName": "Monthly guest review",
+      "scope": {
+        "query": "/members/microsoft.graph.user/?$filter=userType eq 'Guest'",
+        "@odata.type": "#microsoft.graph.accessReviewQueryScope"
+      }
+    },
+    {
+      "id": "ar-role-review",
+      "displayName": "Privileged role review",
+      "scope": {
+        "query": "/roleManagement/directory/roleAssignments",
+        "@odata.type": "#microsoft.graph.accessReviewQueryScope"
+      }
+    }
+  ]
+}

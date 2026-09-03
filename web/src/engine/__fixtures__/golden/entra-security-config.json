@@ -1,0 +1,548 @@
+[
+  {
+    "category": "Security Defaults",
+    "setting": "Security Defaults Enabled",
+    "currentValue": "True",
+    "recommendedValue": "True (if no Conditional Access)",
+    "status": "Pass",
+    "checkId": "ENTRA-SECDEFAULT-001.1",
+    "remediation": "Run: Update-MgPolicyIdentitySecurityDefaultsEnforcementPolicy -IsEnabled $true. Entra admin center > Properties > Manage security defaults.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Auth Method Registration Campaign",
+    "currentValue": "enabled",
+    "recommendedValue": "enabled",
+    "status": "Pass",
+    "checkId": "ENTRA-MFA-001.1",
+    "remediation": "Run: Update-MgBetaPolicyAuthenticationMethodPolicy with RegistrationEnforcement settings. Entra admin center > Protection > Authentication methods > Registration campaign.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "SMS Authentication",
+    "currentValue": "disabled",
+    "recommendedValue": "disabled",
+    "status": "Pass",
+    "checkId": "ENTRA-AUTHMETHOD-001.1",
+    "remediation": "Entra admin center > Protection > Authentication methods > SMS > Disable. SMS is vulnerable to SIM-swapping attacks.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "Voice Call Authentication",
+    "currentValue": "disabled",
+    "recommendedValue": "disabled",
+    "status": "Pass",
+    "checkId": "ENTRA-AUTHMETHOD-001.2",
+    "remediation": "Entra admin center > Protection > Authentication methods > Voice call > Disable. Voice is vulnerable to telephony-based attacks.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "Email OTP Authentication",
+    "currentValue": "disabled",
+    "recommendedValue": "disabled",
+    "status": "Pass",
+    "checkId": "ENTRA-AUTHMETHOD-002.1",
+    "remediation": "Entra admin center > Protection > Authentication methods > Email OTP > Disable. Email OTP is a weaker authentication factor.",
+    "intentDesign": false
+  },
+  {
+    "category": "SSPR",
+    "setting": "Ensure 'Self service password reset enabled' is set to 'All'",
+    "currentValue": "Not auto-measurable via Microsoft Graph",
+    "recommendedValue": "Enabled for all users",
+    "status": "Review",
+    "checkId": "ENTRA-SSPR-001.1",
+    "remediation": "Microsoft Entra admin center > Password reset > Properties > Self service password reset enabled: All. See https://learn.microsoft.com/en-us/entra/identity/authentication/tutorial-enable-sspr for the full enablement walkthrough.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Custom Banned Password List Enforced",
+    "currentValue": "True",
+    "recommendedValue": "True",
+    "status": "Pass",
+    "checkId": "ENTRA-PASSWORD-002.1",
+    "remediation": "Run: Update-MgBetaDirectorySetting for Password Rule Settings with CustomBannedPasswordsEnforced = true. Entra admin center > Protection > Password protection.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Custom Banned Password Count",
+    "currentValue": "3",
+    "recommendedValue": "1+",
+    "status": "Pass",
+    "checkId": "ENTRA-PASSWORD-004.1",
+    "remediation": "Run: Update-MgBetaDirectorySetting for Password Rule Settings to add organization-specific terms. Entra admin center > Protection > Password protection.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Smart Lockout Threshold",
+    "currentValue": "10",
+    "recommendedValue": "10",
+    "status": "Pass",
+    "checkId": "ENTRA-PASSWORD-003.1",
+    "remediation": "Run: Update-MgBetaDirectorySetting for Password Rule Settings with LockoutThreshold. Entra admin center > Protection > Password protection.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Password Expiration: contoso.com",
+    "currentValue": "Never expires",
+    "recommendedValue": "Never expires (with MFA)",
+    "status": "Pass",
+    "checkId": "ENTRA-PASSWORD-001.1",
+    "remediation": "Run: Update-MgDomain -DomainId {domain} -PasswordValidityPeriodInDays 2147483647. M365 admin center > Settings > Password expiration policy.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Password Expiration: fabrikam.com",
+    "currentValue": "90 days",
+    "recommendedValue": "Never expires (with MFA)",
+    "status": "Fail",
+    "checkId": "ENTRA-PASSWORD-001.2",
+    "remediation": "Run: Update-MgDomain -DomainId {domain} -PasswordValidityPeriodInDays 2147483647. M365 admin center > Settings > Password expiration policy.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "Authenticator Fatigue Protection",
+    "currentValue": "Number matching: enabled; App context: enabled",
+    "recommendedValue": "Both enabled",
+    "status": "Pass",
+    "checkId": "ENTRA-AUTHMETHOD-003.1",
+    "remediation": "Entra admin center > Protection > Authentication methods > Microsoft Authenticator > Configure > Require number matching = Enabled, Show application name = Enabled.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "System-Preferred MFA",
+    "currentValue": "default (enabled)",
+    "recommendedValue": "enabled",
+    "status": "Pass",
+    "checkId": "ENTRA-AUTHMETHOD-004.1",
+    "remediation": "Entra admin center > Protection > Authentication methods > Settings > System-preferred multifactor authentication > Enabled.",
+    "intentDesign": false
+  },
+  {
+    "category": "Password Management",
+    "setting": "Password Protection On-Premises",
+    "currentValue": "False",
+    "recommendedValue": "True",
+    "status": "Fail",
+    "checkId": "ENTRA-PASSWORD-005.1",
+    "remediation": "Entra admin center > Protection > Authentication methods > Password protection > Enable password protection on Windows Server Active Directory > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Hybrid Identity",
+    "setting": "Password Hash Sync",
+    "currentValue": "Enabled (last sync: 2026-08-01T12:00:00Z)",
+    "recommendedValue": "Enabled",
+    "status": "Pass",
+    "checkId": "ENTRA-HYBRID-001.1",
+    "remediation": "Password Hash Sync is enabled. Verify it remains active in Microsoft Entra Connect or Microsoft Entra Cloud Sync.",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Global Administrator Count",
+    "currentValue": "1 (excluding 2 break-glass)",
+    "recommendedValue": "2-4",
+    "status": "Fail",
+    "checkId": "ENTRA-ADMIN-001.1",
+    "remediation": "Run: Get-MgDirectoryRole -Filter \"displayName eq 'Global Administrator'\" | Get-MgDirectoryRoleMember. Maintain 2-4 global admins using dedicated accounts (break-glass accounts are excluded from this count).",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "PIM Manages Privileged Roles",
+    "currentValue": "2 permanent (non-PIM-eligible) GA assignment(s): alice@contoso.com, bob@contoso.com",
+    "recommendedValue": "No permanent Global Admin assignments (all GAs PIM-eligible only)",
+    "status": "Fail",
+    "checkId": "ENTRA-PIM-001.1",
+    "remediation": "Entra admin center > Identity Governance > Privileged Identity Management > Microsoft Entra roles > Global Administrator > Remove permanent active assignments. Use eligible assignments with time-bound activation. Requires Entra ID P2 (included in M365 E5).",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "Access Reviews for Guest Users",
+    "currentValue": "1 guest access review(s) configured",
+    "recommendedValue": "At least 1 access review for guests",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-002.1",
+    "remediation": "Entra admin center > Identity Governance > Access reviews > New access review > Review type: Guest users only. Schedule recurring reviews.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "Access Reviews for Privileged Roles",
+    "currentValue": "1 privileged role review(s) configured",
+    "recommendedValue": "At least 1 access review for admin roles",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-003.1",
+    "remediation": "Entra admin center > Identity Governance > Access reviews > New access review > Review type: Members of a group or Users assigned to a privileged role.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "GA Activation Requires Approval",
+    "currentValue": "Yes",
+    "recommendedValue": "Yes",
+    "status": "Pass",
+    "checkId": "ENTRA-PIM-004.1",
+    "remediation": "Entra admin center > Identity Governance > PIM > Microsoft Entra roles > Settings > Global Administrator > Require approval to activate > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Privileged Identity Management",
+    "setting": "PRA Activation Requires Approval",
+    "currentValue": "No",
+    "recommendedValue": "Yes",
+    "status": "Fail",
+    "checkId": "ENTRA-PIM-005.1",
+    "remediation": "Entra admin center > Identity Governance > PIM > Microsoft Entra roles > Settings > Privileged Role Administrator > Require approval to activate > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Cloud-Only Global Admins",
+    "currentValue": "1 synced: Bob OnPrem",
+    "recommendedValue": "All admin accounts cloud-only",
+    "status": "Fail",
+    "checkId": "ENTRA-CLOUDADMIN-001.1",
+    "remediation": "Create cloud-only admin accounts instead of using on-premises synced accounts. Entra admin center > Users > New user > Create user (cloud identity).",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Admin License Footprint",
+    "currentValue": "1 GA with productivity license: Alice Admin",
+    "recommendedValue": "Admins use minimal license (Entra P2 only)",
+    "status": "Warning",
+    "checkId": "ENTRA-CLOUDADMIN-002.1",
+    "remediation": "Assign admin accounts minimal licenses (Entra ID P2). Do not assign E3/E5 productivity suites. M365 admin center > Users > Active users > Licenses.",
+    "intentDesign": false
+  },
+  {
+    "category": "Access Control",
+    "setting": "Entra Admin Center Restricted",
+    "currentValue": "Property not available",
+    "recommendedValue": "True",
+    "status": "Review",
+    "checkId": "ENTRA-ADMIN-002.1",
+    "remediation": "Entra admin center > Identity > Users > User settings > Administration center > verify \"Restrict access to Microsoft Entra admin center\" is set to Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Admin Accounts",
+    "setting": "Admin MFA Method Strength",
+    "currentValue": "1 admin(s) without phishing-resistant MFA: Bob OnPrem",
+    "recommendedValue": "All admins use phishing-resistant MFA",
+    "status": "Warning",
+    "checkId": "ENTRA-ADMIN-004.1",
+    "remediation": "Upgrade admin MFA to phishing-resistant methods (FIDO2, Windows Hello for Business, or certificate-based). Standard MFA (push/TOTP) is vulnerable to adversary-in-the-middle attacks. Entra admin center > Protection > Authentication methods > Policies.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Total CA Policies",
+    "currentValue": "3",
+    "recommendedValue": "1+",
+    "status": "Info",
+    "checkId": "ENTRA-CA-002.1",
+    "remediation": "Informational — review Conditional Access policy coverage for your organization.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Enabled CA Policies",
+    "currentValue": "2",
+    "recommendedValue": "1+",
+    "status": "Pass",
+    "checkId": "ENTRA-CA-003.1",
+    "remediation": "Run: Get-MgIdentityConditionalAccessPolicy | Where-Object {$_.State -eq 'enabled'}. Ensure policies are set to On, not Report-only.",
+    "observedValue": "2",
+    "expectedValue": ">=1",
+    "evidenceSource": "/identity/conditionalAccess/policies",
+    "collectionMethod": "Direct",
+    "permissionRequired": "Policy.Read.All",
+    "confidence": 1,
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Microsoft Entra Join Restriction",
+    "currentValue": "Restricted",
+    "recommendedValue": "Restricted to specific users/groups",
+    "status": "Pass",
+    "checkId": "ENTRA-DEVICE-001.1",
+    "remediation": "Entra admin center > Devices > Device settings > Users may join devices to Microsoft Entra > Selected. Restrict to a specific group of authorized users.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Maximum Devices Per User",
+    "currentValue": "20",
+    "recommendedValue": "15 or fewer",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-002.1",
+    "remediation": "Entra admin center > Devices > Device settings > Maximum number of devices per user. Set to 15 or lower.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Global Admins as Local Admin on Join",
+    "currentValue": "Enabled",
+    "recommendedValue": "Disabled",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-003.1",
+    "remediation": "Entra admin center > Devices > Device settings > Global administrator is added as local administrator on the device during Microsoft Entra join > No.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Local Admin Assignment on Entra Join",
+    "currentValue": "Additional local admins configured: 2",
+    "recommendedValue": "Minimal local admin assignment",
+    "status": "Review",
+    "checkId": "ENTRA-DEVICE-004.1",
+    "remediation": "Entra admin center > Devices > Device settings > Manage Additional local administrators on all Microsoft Entra joined devices. Minimize additional local admins.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Local Administrator Password Solution (LAPS)",
+    "currentValue": "Disabled",
+    "recommendedValue": "Enabled",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-005.1",
+    "remediation": "Entra admin center > Devices > Device settings > Enable Microsoft Entra Local Administrator Password Solution (LAPS) > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "BitLocker Recovery Key Restriction",
+    "currentValue": "Review -- verify users cannot read own BitLocker keys",
+    "recommendedValue": "Users restricted from recovering BitLocker keys",
+    "status": "Review",
+    "checkId": "ENTRA-DEVICE-006.1",
+    "remediation": "Entra admin center > Devices > Device settings > Restrict users from recovering the BitLocker key(s) for their owned devices > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "User Consent for Applications",
+    "currentValue": "Do not allow user consent",
+    "recommendedValue": "Do not allow user consent",
+    "status": "Pass",
+    "checkId": "ENTRA-CONSENT-001.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{PermissionGrantPoliciesAssigned = @()}. Entra admin center > Enterprise applications > Consent and permissions.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "Users Can Register Applications",
+    "currentValue": "False",
+    "recommendedValue": "False",
+    "status": "Pass",
+    "checkId": "ENTRA-APPREG-001.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{AllowedToCreateApps = $false}. Entra admin center > Users > User settings.",
+    "intentDesign": false
+  },
+  {
+    "category": "Directory Settings",
+    "setting": "Users Can Create Security Groups",
+    "currentValue": "False",
+    "recommendedValue": "False",
+    "status": "Pass",
+    "checkId": "ENTRA-GROUP-001.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{AllowedToCreateSecurityGroups = $false}. Entra admin center > Groups > General.",
+    "intentDesign": false
+  },
+  {
+    "category": "Directory Settings",
+    "setting": "Non-Admin Tenant Creation Restricted",
+    "currentValue": "False",
+    "recommendedValue": "False",
+    "status": "Pass",
+    "checkId": "ENTRA-TENANT-001.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{AllowedToCreateTenants = $false}. Entra admin center > Users > User settings.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "Admin Consent Workflow Enabled",
+    "currentValue": "True",
+    "recommendedValue": "True",
+    "status": "Pass",
+    "checkId": "ENTRA-CONSENT-002.1",
+    "remediation": "Run: Update-MgPolicyAdminConsentRequestPolicy -IsEnabled $true. Entra admin center > Enterprise applications > Admin consent requests.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "User Consent Requires Verified Publisher",
+    "currentValue": "User consent fully blocked",
+    "recommendedValue": "User consent restricted to verified publishers or fully blocked",
+    "status": "Pass",
+    "checkId": "ENTRA-CONSENT-003.1",
+    "remediation": "Entra admin center > Enterprise applications > Consent and permissions > User consent settings > Allow consent only from verified publishers or block user consent entirely.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "Tenant-Wide Admin Consent Grants",
+    "currentValue": "3 tenant-wide consent grant(s)",
+    "recommendedValue": "Review and minimize tenant-wide admin consent grants",
+    "status": "Pass",
+    "checkId": "ENTRA-CONSENT-004.1",
+    "remediation": "Review tenant-wide admin consent grants. These grants apply to all users in the tenant. Remove overly broad grants that are no longer needed. Entra admin center > Enterprise applications > filter by Admin consent.",
+    "intentDesign": false
+  },
+  {
+    "category": "External Collaboration",
+    "setting": "Guest Invitation Policy",
+    "currentValue": "Admins and guest inviters only",
+    "recommendedValue": "Admins and guest inviters only",
+    "status": "Pass",
+    "checkId": "ENTRA-GUEST-002.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -AllowInvitesFrom 'adminsAndGuestInviters'. Entra admin center > External Identities > External collaboration settings.",
+    "intentDesign": false
+  },
+  {
+    "category": "External Collaboration",
+    "setting": "Guest User Access Restriction",
+    "currentValue": "Limited access (default)",
+    "recommendedValue": "Restricted access",
+    "status": "Warning",
+    "checkId": "ENTRA-GUEST-001.1",
+    "remediation": "Run: Update-MgPolicyAuthorizationPolicy -GuestUserRoleId '2af84b1e-32c8-42b7-82bc-daa82404023b'. Entra admin center > External Identities > External collaboration settings.",
+    "intentDesign": false
+  },
+  {
+    "category": "External Collaboration",
+    "setting": "Guest User Count",
+    "currentValue": "42",
+    "recommendedValue": "Review periodically",
+    "status": "Info",
+    "checkId": "ENTRA-GUEST-003.1",
+    "remediation": "Informational — review and remove stale guest accounts periodically. Entra admin center > Users > Guest users.",
+    "intentDesign": false
+  },
+  {
+    "category": "Directory Settings",
+    "setting": "LinkedIn Account Connections",
+    "currentValue": "Disabled",
+    "recommendedValue": "Disabled",
+    "status": "Pass",
+    "checkId": "ENTRA-LINKEDIN-001.1",
+    "remediation": "Entra admin center > Users > User settings > LinkedIn account connections > No. Prevents data leakage between LinkedIn and organizational directory.",
+    "intentDesign": false
+  },
+  {
+    "category": "Authentication Methods",
+    "setting": "Per-user MFA (Legacy)",
+    "currentValue": "Review -- verify no per-user MFA states are set to Enforced or Enabled",
+    "recommendedValue": "All per-user MFA disabled (use CA policies)",
+    "status": "Review",
+    "checkId": "ENTRA-PERUSER-001.1",
+    "remediation": "Entra admin center > Users > Per-user MFA > Ensure all users show Disabled. Use Conditional Access policies for MFA enforcement instead of per-user MFA.",
+    "intentDesign": false
+  },
+  {
+    "category": "Application Consent",
+    "setting": "Third-party Integrated Apps Restricted",
+    "currentValue": "Restricted",
+    "recommendedValue": "Restricted",
+    "status": "Pass",
+    "checkId": "ENTRA-APPS-001.1",
+    "remediation": "Entra admin center > Users > User settings > Users can register applications > No. Also review Enterprise applications > User settings > Users can consent to apps.",
+    "intentDesign": false
+  },
+  {
+    "category": "External Collaboration",
+    "setting": "Guest Invitation Domain Restrictions",
+    "currentValue": "Restricted (invites: adminsAndGuestInviters)",
+    "recommendedValue": "Restricted to allowed domains only",
+    "status": "Pass",
+    "checkId": "ENTRA-GUEST-004.1",
+    "remediation": "Entra admin center > External Identities > External collaboration settings > Collaboration restrictions > Allow invitations only to the specified domains.",
+    "intentDesign": false
+  },
+  {
+    "category": "External Collaboration",
+    "setting": "Dynamic Group for Guest Users",
+    "currentValue": "Yes (1 group: Guest-Dynamic)",
+    "recommendedValue": "At least 1 dynamic group for guests",
+    "status": "Pass",
+    "checkId": "ENTRA-GROUP-002.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Group Management",
+    "setting": "Public Groups Have Owners",
+    "currentValue": "1 groups without owners: Ownerless Public Group",
+    "recommendedValue": "All public groups have assigned owners",
+    "status": "Fail",
+    "checkId": "ENTRA-GROUP-003.1",
+    "remediation": "Assign owners to ownerless public M365 groups. Entra admin center > Groups > All groups > select group > Owners > Add owners.",
+    "intentDesign": false
+  },
+  {
+    "category": "Organization Settings",
+    "setting": "Org-Level App Consent Restriction",
+    "currentValue": "Restricted",
+    "recommendedValue": "Do not allow user consent",
+    "status": "Pass",
+    "checkId": "ENTRA-ORGSETTING-001.1",
+    "remediation": "Entra admin center > Enterprise applications > Consent and permissions > User consent settings > Do not allow user consent.",
+    "intentDesign": false
+  },
+  {
+    "category": "Organization Settings",
+    "setting": "Forms Internal Phishing Protection",
+    "currentValue": "Cannot be checked via API",
+    "recommendedValue": "Enabled",
+    "status": "Review",
+    "checkId": "ENTRA-ORGSETTING-002.1",
+    "remediation": "M365 admin center > Settings > Org settings > Microsoft Forms > ensure internal phishing protection is enabled.",
+    "intentDesign": false
+  },
+  {
+    "category": "Organization Settings",
+    "setting": "Third-Party Storage in M365 Web Apps",
+    "currentValue": "Cannot be checked via API",
+    "recommendedValue": "Restricted (all third-party storage disabled)",
+    "status": "Review",
+    "checkId": "ENTRA-ORGSETTING-003.1",
+    "remediation": "M365 admin center > Settings > Org settings > Microsoft 365 on the web > uncheck all third-party storage services.",
+    "intentDesign": false
+  },
+  {
+    "category": "Organization Settings",
+    "setting": "Shared Bookings Pages Restricted",
+    "currentValue": "Cannot be checked via API",
+    "recommendedValue": "Restricted to selected users",
+    "status": "Review",
+    "checkId": "ENTRA-ORGSETTING-004.1",
+    "remediation": "M365 admin center > Settings > Org settings > Bookings > restrict shared booking pages to selected staff members.",
+    "intentDesign": false
+  },
+  {
+    "category": "Directory Health",
+    "setting": "Disabled Member Accounts",
+    "currentValue": "25 disabled of 500 total members (5%)",
+    "recommendedValue": "Review periodically; remove accounts no longer needed",
+    "status": "Info",
+    "checkId": "ENTRA-DISABLED-001.1",
+    "remediation": "Review disabled accounts and remove any that are no longer needed. Entra admin center > Users > All users > filter by Account status: Disabled.",
+    "intentDesign": false
+  }
+]

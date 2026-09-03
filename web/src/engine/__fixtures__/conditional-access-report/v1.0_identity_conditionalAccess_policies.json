@@ -1,0 +1,56 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#identity/conditionalAccess/policies",
+  "value": [
+    {
+      "id": "cap-2",
+      "displayName": "Require MFA All Users",
+      "state": "enabled",
+      "createdDateTime": "2025-02-01T10:00:00Z",
+      "modifiedDateTime": "2025-06-11T09:30:00Z",
+      "conditions": {
+        "applications": { "includeApplications": ["All"], "excludeApplications": [] },
+        "users": {
+          "includeUsers": ["all"],
+          "excludeUsers": ["bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"],
+          "includeGroups": [],
+          "excludeGroups": [],
+          "includeRoles": [],
+          "excludeRoles": []
+        }
+      },
+      "grantControls": { "operator": "OR", "builtInControls": ["mfa"] },
+      "sessionControls": {
+        "signInFrequency": { "isEnabled": true, "type": "days", "value": "1" },
+        "persistentBrowser": null,
+        "cloudAppSecurity": null,
+        "applicationEnforcedRestrictions": null
+      }
+    },
+    {
+      "id": "cap-1",
+      "displayName": "Block Legacy Auth",
+      "state": "enabledForReportingButNotEnforced",
+      "createdDateTime": "2024-11-03T08:15:00Z",
+      "modifiedDateTime": "2024-11-03T08:15:00Z",
+      "conditions": {
+        "applications": { "includeApplications": ["All"], "excludeApplications": [] },
+        "users": { "includeUsers": ["all"], "excludeUsers": [] }
+      },
+      "grantControls": { "operator": "OR", "builtInControls": ["blockLegacyAuthentication"] },
+      "sessionControls": null
+    },
+    {
+      "id": "cap-3",
+      "displayName": "Guest Exclusion",
+      "state": "disabled",
+      "createdDateTime": "2025-04-20T12:00:00Z",
+      "modifiedDateTime": null,
+      "conditions": {
+        "applications": { "includeApplications": ["00000000-0000-0000-0000-000000000001"], "excludeApplications": [] },
+        "users": { "includeUsers": [], "excludeUsers": ["cccccccc-cccc-4ccc-8ccc-cccccccccccc"] }
+      },
+      "grantControls": { "operator": "AND", "builtInControls": ["mfa", "compliantDevice"] },
+      "sessionControls": { "applicationEnforcedRestrictions": { "isEnabled": true } }
+    }
+  ]
+}

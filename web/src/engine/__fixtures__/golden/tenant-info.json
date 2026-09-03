@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Tenant Info",
+    "setting": "Contoso Ltd",
+    "currentValue": "OrgDisplayName=Contoso Ltd; TenantId=6d77f37b-bbbb-4a35-9cbb-ef1e5f4d0b47; VerifiedDomains=contoso.com; contoso.onmicrosoft.com; partner.contoso.com; DefaultDomain=contoso.com; SecurityDefaultsEnabled=True; CreatedDateTime=2021-03-04T19:46:05Z; OnPremisesSyncEnabled=True; OnPremisesLastSyncDateTime=2026-08-20T01:12:33Z; OnPremisesLastPasswordSyncDateTime=; OnPremisesProvisioningErrorCount=1",
+    "recommendedValue": "",
+    "status": "Info",
+    "checkId": "",
+    "remediation": "",
+    "intentDesign": false
+  }
+]

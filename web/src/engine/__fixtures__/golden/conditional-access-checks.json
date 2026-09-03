@@ -1,0 +1,88 @@
+[
+  {
+    "category": "Conditional Access",
+    "setting": "Total CA Policies",
+    "currentValue": "3",
+    "recommendedValue": "1+",
+    "status": "Info",
+    "checkId": "ENTRA-CA-002.1",
+    "remediation": "Informational — review Conditional Access policy coverage for your organization.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Enabled CA Policies",
+    "currentValue": "2",
+    "recommendedValue": "1+",
+    "status": "Pass",
+    "checkId": "ENTRA-CA-003.1",
+    "remediation": "Run: Get-MgIdentityConditionalAccessPolicy | Where-Object {$_.State -eq 'enabled'}. Ensure policies are set to On, not Report-only.",
+    "observedValue": "2",
+    "expectedValue": ">=1",
+    "evidenceSource": "/identity/conditionalAccess/policies",
+    "collectionMethod": "Direct",
+    "permissionRequired": "Policy.Read.All",
+    "confidence": 1,
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Microsoft Entra Join Restriction",
+    "currentValue": "Restricted",
+    "recommendedValue": "Restricted to specific users/groups",
+    "status": "Pass",
+    "checkId": "ENTRA-DEVICE-001.1",
+    "remediation": "Entra admin center > Devices > Device settings > Users may join devices to Microsoft Entra > Selected. Restrict to a specific group of authorized users.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Maximum Devices Per User",
+    "currentValue": "20",
+    "recommendedValue": "15 or fewer",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-002.1",
+    "remediation": "Entra admin center > Devices > Device settings > Maximum number of devices per user. Set to 15 or lower.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Global Admins as Local Admin on Join",
+    "currentValue": "Enabled",
+    "recommendedValue": "Disabled",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-003.1",
+    "remediation": "Entra admin center > Devices > Device settings > Global administrator is added as local administrator on the device during Microsoft Entra join > No.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Local Admin Assignment on Entra Join",
+    "currentValue": "Additional local admins configured: 2",
+    "recommendedValue": "Minimal local admin assignment",
+    "status": "Review",
+    "checkId": "ENTRA-DEVICE-004.1",
+    "remediation": "Entra admin center > Devices > Device settings > Manage Additional local administrators on all Microsoft Entra joined devices. Minimize additional local admins.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "Local Administrator Password Solution (LAPS)",
+    "currentValue": "Disabled",
+    "recommendedValue": "Enabled",
+    "status": "Fail",
+    "checkId": "ENTRA-DEVICE-005.1",
+    "remediation": "Entra admin center > Devices > Device settings > Enable Microsoft Entra Local Administrator Password Solution (LAPS) > Yes.",
+    "intentDesign": false
+  },
+  {
+    "category": "Device Management",
+    "setting": "BitLocker Recovery Key Restriction",
+    "currentValue": "Review -- verify users cannot read own BitLocker keys",
+    "recommendedValue": "Users restricted from recovering BitLocker keys",
+    "status": "Review",
+    "checkId": "ENTRA-DEVICE-006.1",
+    "remediation": "Entra admin center > Devices > Device settings > Restrict users from recovering the BitLocker key(s) for their owned devices > Yes.",
+    "intentDesign": false
+  }
+]

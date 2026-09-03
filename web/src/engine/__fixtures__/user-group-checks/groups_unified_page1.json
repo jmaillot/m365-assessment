@@ -1,0 +1,20 @@
+{
+  "value": [
+    {
+      "id": "a1bbbbbb-0000-4000-8000-000000000001",
+      "displayName": "Team Owned",
+      "visibility": "Public"
+    },
+    {
+      "id": "a2bbbbbb-0000-4000-8000-000000000002",
+      "displayName": "Ownerless Public Group",
+      "visibility": "Public"
+    },
+    {
+      "id": "a3bbbbbb-0000-4000-8000-000000000003",
+      "displayName": "Private Team",
+      "visibility": "HiddenMembership"
+    }
+  ],
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/groups?$filter=groupTypes/any(g:g%20eq%20%27Unified%27)&$select=displayName,id,visibility&$top=999&$skiptoken=p2"
+}

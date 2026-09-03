@@ -1,0 +1,192 @@
+name: Sync CheckID on Release
+# Channel: stable.
+#
+# M365-Assess subscribes to the stable channel — tagged CheckID releases only.
+# It does NOT subscribe to checkid-preview events; preview-channel dispatches
+# from CheckID main HEAD are intentionally ignored. This matches M365-Assess's
+# conservative public-release posture (PSGallery module).
+#
+# Triggered by CheckID tag push via repository_dispatch, or manually via
+# workflow_dispatch.
+#
+# Scope: the upstream registry serves multiple assessment scopes (M365, Windows
+# endpoint WIN-*, Azure subscription AZ-*). This workflow partitions the registry
+# to the M365 collectors listed in controls/sync-scope.json before committing —
+# out-of-scope checks stay in the upstream CheckID release (the canonical source)
+# and are never shipped in this module.
+
+on:
+  repository_dispatch:
+    types: [checkid-released]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'CheckID tag to sync (e.g. v1.3.0)'
+        required: true
+        default: 'v1.3.0'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Sync CheckID registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+
+      - name: Verify channel
+        # Defense-in-depth: even though we only subscribe to checkid-released,
+        # confirm the dispatch payload's channel is stable (or absent for
+        # workflow_dispatch / older payloads). Fail fast if a preview payload
+        # somehow reaches this workflow.
+        run: |
+          CHANNEL="${{ github.event.client_payload.channel }}"
+          if [ -n "$CHANNEL" ] && [ "$CHANNEL" != "stable" ]; then
+            echo "::error::M365-Assess only consumes the stable channel; got channel='$CHANNEL'"
+            exit 1
+          fi
+          echo "Channel: ${CHANNEL:-stable (workflow_dispatch / pre-channel payload)}"
+
+      - name: Fetch CheckID data
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+        run: |
+          TAG="${{ github.event.client_payload.tag || github.event.inputs.tag }}"
+          echo "Syncing from CheckID $TAG"
+          BASE="https://raw.githubusercontent.com/Galvnyz/CheckID/$TAG/data"
+          curl -sL "$BASE/registry.json" -o src/M365-Assess/controls/registry.json
+          curl -sL "$BASE/sku-feature-map.json" -o src/M365-Assess/controls/sku-feature-map.json
+          curl -sL "$BASE/cmmc-ez-handoff.json" -o src/M365-Assess/controls/cmmc-ez-handoff.json
+          for f in cis-controls-v8 cis-m365-v6 cisa-scuba cmmc essential-eight fedramp hipaa iso-27001 mitre-attack nist-800-53-r5 nist-csf pci-dss-v4 soc2-tsc stig; do
+            curl -sL "$BASE/frameworks/$f.json" -o "src/M365-Assess/controls/frameworks/$f.json"
+          done
+
+      - name: Normalize encoding in downloaded files
+        run: |
+          python3 - <<'EOF'
+          import glob
+
+          # Only apply CP1252 byte fixes to files that are NOT already valid UTF-8.
+          # Applying byte substitutions to valid UTF-8 files double-encodes characters
+          # (e.g. c2 a7 for § becomes c2 c2 a7 when the bare a7 replacement fires).
+          cp1252_fixes = {
+              bytes([0x97]): '\u2014'.encode('utf-8'),  # em dash
+              bytes([0x96]): '\u2013'.encode('utf-8'),  # en dash
+              bytes([0xa7]): '\u00a7'.encode('utf-8'),  # section sign
+              bytes([0xa9]): '\u00a9'.encode('utf-8'),  # copyright
+              bytes([0xae]): '\u00ae'.encode('utf-8'),  # registered
+          }
+
+          files = glob.glob('src/M365-Assess/controls/frameworks/*.json')
+          files.append('src/M365-Assess/controls/registry.json')
+          for path in files:
+              raw = open(path, 'rb').read()
+              try:
+                  raw.decode('utf-8')
+                  continue  # already valid UTF-8, skip
+              except UnicodeDecodeError:
+                  pass
+              fixed = raw
+              for bad, good in cp1252_fixes.items():
+                  fixed = fixed.replace(bad, good)
+              if fixed != raw:
+                  open(path, 'wb').write(fixed)
+                  print(f'Encoding fixed: {path}')
+          EOF
+
+      - name: Filter registry to M365 collector scope
+        run: |
+          python3 - <<'EOF'
+          import json
+
+          with open('src/M365-Assess/controls/sync-scope.json', encoding='utf-8') as f:
+              scope = set(json.load(f)['collectors'])
+
+          path = 'src/M365-Assess/controls/registry.json'
+          with open(path, encoding='utf-8') as f:
+              reg = json.load(f)
+
+          before = len(reg['checks'])
+          # Keep checks whose collector is in scope; checks without a collector
+          # field are kept (they cannot be classified as out-of-scope).
+          reg['checks'] = [c for c in reg['checks']
+                           if c.get('collector') is None or c['collector'] in scope]
+          dropped = before - len(reg['checks'])
+
+          with open(path, 'w', encoding='utf-8') as f:
+              json.dump(reg, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          print(f"Registry scoped to M365: kept {len(reg['checks'])}, dropped {dropped} out-of-scope checks")
+          EOF
+
+      - name: Merge local extension checks
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+
+          with open('src/M365-Assess/controls/registry.json', encoding='utf-8') as f:
+              reg = json.load(f)
+
+          with open('src/M365-Assess/controls/local-extensions.json', encoding='utf-8') as f:
+              local = json.load(f)
+
+          existing_ids = {c['checkId'] for c in reg['checks']}
+          added = []
+          for check in local:
+              if check['checkId'] not in existing_ids:
+                  reg['checks'].append(check)
+                  added.append(check['checkId'])
+
+          with open('src/M365-Assess/controls/registry.json', 'w', encoding='utf-8') as f:
+              json.dump(reg, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          if added:
+              print(f"Merged {len(added)} local extension checks: {', '.join(added)}")
+          else:
+              print("All local extension checks already present in upstream registry")
+          EOF
+
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet src/M365-Assess/controls/ && echo "changed=false" >> "$GITHUB_OUTPUT" \
+            || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create PR if changed
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+        run: |
+          TAG="${{ github.event.client_payload.tag || github.event.inputs.tag }}"
+          BRANCH="chore/sync-checkid-$TAG"
+          git checkout -B "$BRANCH"
+          git add src/M365-Assess/controls/
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: sync CheckID registry to $TAG"
+          git push --force origin "$BRANCH"
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --title "chore: sync CheckID registry to $TAG" \
+              --body "Automated PR triggered by CheckID $TAG release. Updates controls/registry.json and framework definitions from upstream CheckID. Review the diff and merge when ready." \
+              --base main \
+              --head "$BRANCH"
+          else
+            echo "PR #$EXISTING_PR already exists for $BRANCH — skipping creation"
+          fi
+
+      - name: Summary
+        run: |
+          TAG="${{ github.event.client_payload.tag || github.event.inputs.tag }}"
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "### CheckID $TAG sync PR created" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### CheckID $TAG — no changes detected" >> "$GITHUB_STEP_SUMMARY"
+          fi

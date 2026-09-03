@@ -1,0 +1,260 @@
+{
+  "/v1.0/policies/identitySecurityDefaultsEnforcementPolicy": {
+    "id": "identitySecurityDefaultsEnforcementPolicy",
+    "displayName": "Security Defaults",
+    "isEnabled": false
+  },
+  "/v1.0/identity/conditionalAccess/policies": {
+    "value": [
+      {
+        "id": "p1",
+        "displayName": "Admin MFA baseline",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeRoles": ["62e90394-69f5-4237-9190-012177145e10"] }
+        },
+        "grantControls": { "operator": "OR", "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p2",
+        "displayName": "All Users MFA",
+        "state": "enabled",
+        "conditions": { "users": { "includeUsers": ["All"] } },
+        "grantControls": { "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p3",
+        "displayName": "Legacy Block",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "clientAppTypes": ["exchangeActiveSync", "other"]
+        },
+        "grantControls": { "builtInControls": ["block"] }
+      },
+      {
+        "id": "p4",
+        "displayName": "Admin Session Freq",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeRoles": ["62e90394-69f5-4237-9190-012177145e10"] }
+        },
+        "sessionControls": {
+          "signInFrequency": { "isEnabled": true, "value": 4, "type": "hours" },
+          "persistentBrowser": { "isEnabled": true, "mode": "never" }
+        }
+      },
+      {
+        "id": "p5",
+        "displayName": "Phishing Resistant Admins",
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "includeRoles": [
+              "62e90394-69f5-4237-9190-012177145e10",
+              "e8611ab8-c189-46e8-94e1-60213ab1f814"
+            ]
+          }
+        },
+        "grantControls": {
+          "operator": "AND",
+          "builtInControls": [],
+          "authenticationStrength": {
+            "id": "strength-1",
+            "displayName": "Phishing-resistant MFA"
+          }
+        }
+      },
+      {
+        "id": "p6",
+        "displayName": "User Risk Policy",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "userRiskLevels": ["high", "medium"]
+        },
+        "grantControls": { "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p7",
+        "displayName": "Sign-in Risk Policy",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "signInRiskLevels": ["high", "medium"]
+        },
+        "grantControls": { "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p8",
+        "displayName": "Block Medium High Risk",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "signInRiskLevels": ["medium", "high"]
+        },
+        "grantControls": { "builtInControls": ["block"] }
+      },
+      {
+        "id": "p9",
+        "displayName": "Require Compliant Device",
+        "state": "enabled",
+        "conditions": { "users": { "includeUsers": ["All"] } },
+        "grantControls": { "builtInControls": ["compliantDevice", "domainJoinedDevice"] }
+      },
+      {
+        "id": "p10",
+        "displayName": "SecInfo Registration Device",
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "includeUsers": ["All"],
+            "includeUserActions": ["urn:user:registersecurityinfo"]
+          }
+        },
+        "grantControls": { "builtInControls": ["compliantDevice"] }
+      },
+      {
+        "id": "p11",
+        "displayName": "Empty Target Policy",
+        "state": "enabled",
+        "conditions": { "users": {} }
+      },
+      {
+        "id": "p12",
+        "displayName": "Intune Enrollment Freq",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "applications": {
+            "includeApplications": ["d4ebce55-015a-49b5-a083-c84d1797ae8c"]
+          }
+        },
+        "sessionControls": {
+          "signInFrequency": { "isEnabled": true, "type": "everyTime" }
+        }
+      },
+      {
+        "id": "p13",
+        "displayName": "Block Device Code Flow",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "authenticationFlows": { "transferMethods": ["deviceCodeFlow"] }
+        },
+        "grantControls": { "builtInControls": ["block"] }
+      },
+      {
+        "id": "p14",
+        "displayName": "Report Only Legacy",
+        "state": "enabledForReportingButNotEnforced",
+        "conditions": { "users": { "includeUsers": ["All"] } },
+        "grantControls": { "builtInControls": ["block"] }
+      },
+      {
+        "id": "p15",
+        "displayName": "Combined Risk",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "signInRiskLevels": ["low"],
+          "userRiskLevels": ["low"]
+        }
+      },
+      {
+        "id": "p16",
+        "displayName": "Stale Location Ref",
+        "state": "enabled",
+        "conditions": {
+          "users": { "includeUsers": ["All"] },
+          "locations": {
+            "includeLocations": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"]
+          }
+        }
+      },
+      {
+        "id": "p17",
+        "displayName": "Group Targeted",
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "includeGroups": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222"
+            ]
+          }
+        }
+      },
+      {
+        "id": "p18",
+        "displayName": "All Users MFA with exclusions",
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "includeUsers": ["All"],
+            "excludeUsers": ["excluded-user@contoso.example"],
+            "excludeGroups": ["33333333-3333-3333-3333-333333333333"]
+          }
+        },
+        "grantControls": { "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p19",
+        "displayName": "Disabled MFA All Users",
+        "state": "disabled",
+        "conditions": { "users": { "includeUsers": ["All"] } },
+        "grantControls": { "builtInControls": ["mfa"] }
+      },
+      {
+        "id": "p20",
+        "displayName": "Admin MFA excluding CA Admin",
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "includeRoles": ["62e90394-69f5-4237-9190-012177145e10"],
+            "excludeRoles": ["b1be1c3e-b65d-4f19-8427-f6fa0d97feb9"]
+          }
+        },
+        "grantControls": { "builtInControls": ["mfa"] }
+      }
+    ]
+  },
+  "/v1.0/identity/conditionalAccess/namedLocations": {
+    "value": [
+      {
+        "id": "ip-1",
+        "@odata.type": "#microsoft.graph.ipNamedLocation",
+        "displayName": "HQ Public IPs",
+        "isTrusted": true
+      },
+      {
+        "id": "country-1",
+        "@odata.type": "#microsoft.graph.countryNamedLocation",
+        "displayName": "Allowed Countries",
+        "isTrusted": false
+      }
+    ]
+  },
+  "/v1.0/roleManagement/directory/roleAssignments?$top=999": {
+    "value": [
+      {
+        "id": "ra1",
+        "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+      },
+      {
+        "id": "ra2",
+        "roleDefinitionId": "112f9a7f-7249-4951-bd88-c42b60cebe72"
+      },
+      {
+        "id": "ra3",
+        "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10"
+      }
+    ]
+  },
+  "/v1.0/groups/33333333-3333-3333-3333-333333333333?$select=id": {
+    "id": "33333333-3333-3333-3333-333333333333"
+  },
+  "/v1.0/groups/11111111-1111-1111-1111-111111111111?$select=id": {
+    "id": "11111111-1111-1111-1111-111111111111"
+  }
+}

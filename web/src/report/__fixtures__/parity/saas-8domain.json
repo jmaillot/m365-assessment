@@ -1,0 +1,30 @@
+{
+  "frameworks": [
+    { "id": "cis-controls-v8", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "cis-m365-v6", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "cisa-scuba", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "cmmc", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "essential-eight", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "fedramp", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "hipaa", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "iso-27001", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "iso-27002", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "mitre-attack", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "nist-800-53-r5", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "nist-csf", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "pci-dss-v4", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "soc2-tsc", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 },
+    { "id": "stig", "scorePct": 80, "controlsCovered": 8, "controlsTotal": 10 }
+  ],
+  "findings": [
+    { "checkId": "ENTRA-TEST-001.1", "domain": "Entra ID", "status": "Pass" },
+    { "checkId": "DEFENDER-TEST-001.1", "domain": "Defender", "status": "Pass" },
+    { "checkId": "INTUNE-TEST-001.1", "domain": "Intune", "status": "Pass" },
+    { "checkId": "EXO-TEST-001.1", "domain": "Exchange Online", "status": "Pass" },
+    { "checkId": "SPO-TEST-001.1", "domain": "SharePoint & OneDrive", "status": "Pass" },
+    { "checkId": "TEAMS-TEST-001.1", "domain": "Teams", "status": "Fail" },
+    { "checkId": "PURVIEW-TEST-001.1", "domain": "Purview", "status": "Pass" },
+    { "checkId": "POWERBI-GUEST-001.1", "domain": "Power BI", "status": "Pass" },
+    { "checkId": "INVENTORY-TEST-001.1", "domain": "Inventory", "status": "Pass" }
+  ]
+}

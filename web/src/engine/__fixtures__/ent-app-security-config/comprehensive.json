@@ -1,0 +1,226 @@
+{
+  "/v1.0/organization": {
+    "value": [{ "id": "aaaaaaaa-aaaa-4000-8000-aaaaaaaaaaaa" }]
+  },
+  "/v1.0/servicePrincipals?$select=id,appId,displayName,appOwnerOrganizationId,servicePrincipalType,keyCredentials,passwordCredentials,accountEnabled&$top=999": {
+    "value": [
+      {
+        "id": "tp-1",
+        "appId": "11111111-1111-4000-8000-111111111111",
+        "displayName": "Third Party App",
+        "appOwnerOrganizationId": "bbbbbbbb-bbbb-4000-8000-bbbbbbbbbbbb",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [{ "endDateTime": "2030-01-01T00:00:00Z" }],
+        "accountEnabled": true
+      },
+      {
+        "id": "tp-expired",
+        "appId": "55555555-5555-4000-8000-555555555555",
+        "displayName": "Expired Cred App",
+        "appOwnerOrganizationId": "bbbbbbbb-bbbb-4000-8000-bbbbbbbbbbbb",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [{ "endDateTime": "2020-01-01T00:00:00Z" }],
+        "accountEnabled": true
+      },
+      {
+        "id": "tp-dual",
+        "appId": "66666666-6666-4000-8000-666666666666",
+        "displayName": "Dual Cred App",
+        "appOwnerOrganizationId": "bbbbbbbb-bbbb-4000-8000-bbbbbbbbbbbb",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [{ "endDateTime": "2031-01-01T00:00:00Z" }],
+        "passwordCredentials": [{ "endDateTime": "2031-01-01T00:00:00Z" }],
+        "accountEnabled": true
+      },
+      {
+        "id": "msfp-1",
+        "appId": "cc15fd57-2c6c-4117-a886-de76996748e8",
+        "displayName": "Microsoft Teams",
+        "appOwnerOrganizationId": "f8cdef31-a31e-4b4a-93e4-5f571e91255a",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [],
+        "accountEnabled": true
+      },
+      {
+        "id": "imp-1",
+        "appId": "44444444-4444-4000-8000-444444444444",
+        "displayName": "Microsoft Graph Helper",
+        "appOwnerOrganizationId": "bbbbbbbb-bbbb-4000-8000-bbbbbbbbbbbb",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [],
+        "accountEnabled": true
+      },
+      {
+        "id": "mi-1",
+        "appId": "22222222-2222-4000-8000-222222222222",
+        "displayName": "Automation MI",
+        "appOwnerOrganizationId": "aaaaaaaa-aaaa-4000-8000-aaaaaaaaaaaa",
+        "servicePrincipalType": "ManagedIdentity",
+        "keyCredentials": [],
+        "passwordCredentials": [],
+        "accountEnabled": true
+      },
+      {
+        "id": "int-1",
+        "appId": "77777777-7777-4000-8000-777777777777",
+        "displayName": "Internal App",
+        "appOwnerOrganizationId": "aaaaaaaa-aaaa-4000-8000-aaaaaaaaaaaa",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [{ "endDateTime": "2030-01-01T00:00:00Z" }],
+        "accountEnabled": true
+      },
+      {
+        "id": "int-disabled",
+        "appId": "88888888-8888-4000-8000-888888888888",
+        "displayName": "Disabled Internal",
+        "appOwnerOrganizationId": "aaaaaaaa-aaaa-4000-8000-aaaaaaaaaaaa",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [{ "endDateTime": "2030-01-01T00:00:00Z" }],
+        "accountEnabled": false
+      },
+      {
+        "id": "exc-1",
+        "appId": "99999999-9999-4000-8000-999999999999",
+        "displayName": "Perm Hoarder",
+        "appOwnerOrganizationId": "aaaaaaaa-aaaa-4000-8000-aaaaaaaaaaaa",
+        "servicePrincipalType": "Application",
+        "keyCredentials": [],
+        "passwordCredentials": [],
+        "accountEnabled": true
+      }
+    ]
+  },
+  "/v1.0/roleManagement/directory/roleAssignments?$top=999": {
+    "value": [
+      { "principalId": "tp-1", "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10" },
+      { "principalId": "int-1", "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10" },
+      { "principalId": "int-1", "roleDefinitionId": "e8611ab8-c189-46e8-94e1-60213ab1f814" },
+      { "principalId": "mi-1", "roleDefinitionId": "b1be1c3e-b65d-4f19-8427-f6fa0d97feb9" },
+      { "principalId": "msfp-1", "roleDefinitionId": "b1be1c3e-b65d-4f19-8427-f6fa0d97feb9" }
+    ]
+  },
+  "/v1.0/servicePrincipals?$filter=appId%20eq%20%2700000003-0000-0000-c000-000000000000%27&$select=id,appRoles,oauth2PermissionScopes": {
+    "value": [
+      {
+        "id": "graph-sp",
+        "appId": "00000003-0000-0000-c000-000000000000",
+        "appRoles": [
+          { "id": "role-tier0", "value": "Application.ReadWrite.All" },
+          { "id": "role-tier1", "value": "Mail.ReadWrite" }
+        ],
+        "oauth2PermissionScopes": [
+          { "id": "scope-delwd", "value": "Directory.ReadWrite.All" },
+          { "id": "scope-mailrw", "value": "Mail.ReadWrite" }
+        ]
+      }
+    ]
+  },
+  "/v1.0/servicePrincipals/graph-sp/appRoleAssignedTo?$top=999": {
+    "value": [
+      { "principalId": "tp-1", "appRoleId": "role-tier0" },
+      { "principalId": "tp-1", "appRoleId": "role-tier1" },
+      { "principalId": "imp-1", "appRoleId": "role-tier0" },
+      { "principalId": "mi-1", "appRoleId": "role-tier1" },
+      { "principalId": "int-1", "appRoleId": "role-tier0" },
+      { "principalId": "exc-1", "appRoleId": "junk-01" },
+      { "principalId": "exc-1", "appRoleId": "junk-02" },
+      { "principalId": "exc-1", "appRoleId": "junk-03" },
+      { "principalId": "exc-1", "appRoleId": "junk-04" },
+      { "principalId": "exc-1", "appRoleId": "junk-05" },
+      { "principalId": "exc-1", "appRoleId": "junk-06" },
+      { "principalId": "exc-1", "appRoleId": "junk-07" },
+      { "principalId": "exc-1", "appRoleId": "junk-08" },
+      { "principalId": "exc-1", "appRoleId": "junk-09" },
+      { "principalId": "exc-1", "appRoleId": "junk-10" },
+      { "principalId": "exc-1", "appRoleId": "junk-11" }
+    ]
+  },
+  "/v1.0/oauth2PermissionGrants?$top=999": {
+    "value": [
+      { "clientId": "tp-1", "scope": "Directory.ReadWrite.All Mail.Read" },
+      { "clientId": "imp-1", "scope": "Mail.ReadWrite offline_access" },
+      { "clientId": "msfp-1", "scope": "User.Read" }
+    ]
+  },
+  "/v1.0/applications?$select=id,appId,displayName,signInAudience,web,spa,publicClient&$top=999": {
+    "value": [
+      {
+        "id": "app-web",
+        "appId": "aw-1",
+        "displayName": "Webby App",
+        "signInAudience": "AzureADMyOrg",
+        "web": { "redirectUris": ["https://good.example.com", "http://insecure.example.com"] }
+      },
+      {
+        "id": "app-local",
+        "appId": "al-1",
+        "displayName": "Localhost App",
+        "signInAudience": "AzureADMyOrg",
+        "spa": { "redirectUris": ["https://ok.example.com", "http://localhost:3000/callback"] }
+      },
+      {
+        "id": "app-wild",
+        "appId": "awi-1",
+        "displayName": "Wildcard App",
+        "signInAudience": "AzureADMyOrg",
+        "spa": { "redirectUris": ["https://*.example.com/signin"] }
+      },
+      {
+        "id": "app-multi",
+        "appId": "am-1",
+        "displayName": "Multitenant App",
+        "signInAudience": "AzureADMultipleOrgs"
+      },
+      {
+        "id": "app-pub",
+        "appId": "ap-1",
+        "displayName": "Public Client App",
+        "signInAudience": "AzureADMyOrg",
+        "publicClient": { "redirectUris": ["http://127.0.0.1/auth"] }
+      },
+      {
+        "id": "app-v6",
+        "appId": "av-1",
+        "displayName": "IPv6 Local",
+        "signInAudience": "AzureADMyOrg",
+        "publicClient": { "redirectUris": ["[::1]:5000/auth"] }
+      }
+    ]
+  },
+  "/v1.0/policies/defaultAppManagementPolicy": {
+    "isEnabled": true,
+    "displayName": "default"
+  },
+  "/v1.0/servicePrincipals/tp-1?$select=signInActivity": {
+    "signInActivity": { "lastSignInDateTime": "2999-01-01T00:00:00Z" }
+  },
+  "/v1.0/servicePrincipals/tp-expired?$select=signInActivity": {
+    "signInActivity": { "lastSignInDateTime": "2000-01-01T00:00:00Z" }
+  },
+  "/v1.0/servicePrincipals/tp-dual?$select=signInActivity": {
+    "signInActivity": { "lastSignInDateTime": "2000-06-01T00:00:00Z" }
+  },
+  "/v1.0/servicePrincipals/int-1?$select=signInActivity": {
+    "signInActivity": { "lastSignInDateTime": "2999-01-01T00:00:00Z" }
+  },
+  "/v1.0/servicePrincipals/tp-1/owners?$select=id,displayName": {
+    "value": [{ "id": "o1", "displayName": "Owner One" }]
+  },
+  "/v1.0/servicePrincipals/imp-1/owners?$select=id,displayName": {
+    "value": [{ "id": "o2", "displayName": "Imp Owner" }]
+  },
+  "/v1.0/servicePrincipals/int-1/owners?$select=id,displayName": { "value": [] },
+  "/v1.0/servicePrincipals/msfp-1/owners?$select=id,displayName": { "value": [] },
+  "/v1.0/servicePrincipals/tp-1/owners?$select=id": {
+    "value": [{ "id": "o1" }]
+  },
+  "/v1.0/servicePrincipals/tp-expired/owners?$select=id": { "value": [] },
+  "/v1.0/servicePrincipals/int-1/owners?$select=id": { "value": [] },
+  "/v1.0/servicePrincipals/int-disabled/owners?$select=id": { "value": [] }
+}

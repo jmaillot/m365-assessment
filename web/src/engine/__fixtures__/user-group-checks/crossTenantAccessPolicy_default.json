@@ -1,0 +1,10 @@
+{
+  "b2bCollaborationInbound": {
+    "usersAndGroups": { "accessType": "allowed" },
+    "applications": { "accessType": "allowed" }
+  },
+  "b2bCollaborationOutbound": {},
+  "b2bDirectConnectInbound": {},
+  "b2bDirectConnectOutbound": {},
+  "inboundTrust": {}
+}

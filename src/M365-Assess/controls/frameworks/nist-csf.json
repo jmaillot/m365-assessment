@@ -1,0 +1,61 @@
+{
+  "frameworkId": "nist-csf",
+  "label": "NIST Cybersecurity Framework 2.0",
+  "version": "2.0",
+  "description": "NIST Cybersecurity Framework — voluntary framework for managing and reducing cybersecurity risk, organized into six functions: Govern, Identify, Protect, Detect, Respond, and Recover.",
+  "homepageUrl": "https://www.nist.gov/cyberframework",
+  "css": "fw-csf",
+  "totalControls": 106,
+  "registryKey": "nist-csf",
+  "csvColumn": "NistCsf",
+  "displayOrder": 3,
+  "scoring": {
+    "method": "function-coverage",
+    "functions": {
+      "GV": {
+        "label": "Govern",
+        "subcategories": 15
+      },
+      "ID": {
+        "label": "Identify",
+        "subcategories": 17
+      },
+      "PR": {
+        "label": "Protect",
+        "subcategories": 27
+      },
+      "DE": {
+        "label": "Detect",
+        "subcategories": 18
+      },
+      "RS": {
+        "label": "Respond",
+        "subcategories": 15
+      },
+      "RC": {
+        "label": "Recover",
+        "subcategories": 14
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "background": "#fef3c7",
+      "color": "#92400e"
+    },
+    "dark": {
+      "background": "#78350F",
+      "color": "#FCD34D"
+    }
+  },
+  "groupBy": "dot-prefix",
+  "groupLabel": "function",
+  "groups": {
+    "GV": "Govern",
+    "ID": "Identify",
+    "PR": "Protect",
+    "DE": "Detect",
+    "RS": "Respond",
+    "RC": "Recover"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "value": [
+    {
+      "id": "aaaaaaaa-0000-4000-8000-000000000000",
+      "displayName": "Password Rule Settings",
+      "templateId": "5cf823b8-9d13-41f3-bcbd-cff023446be6",
+      "values": [
+        { "name": "BannedPasswordList", "value": "Password123,Contoso!,Summer2024!" },
+        { "name": "EnableBannedPasswordCheck", "value": "True" },
+        { "name": "LockoutThreshold", "value": "10" },
+        { "name": "EnableBannedPasswordCheckOnPremises", "value": "False" }
+      ]
+    }
+  ]
+}

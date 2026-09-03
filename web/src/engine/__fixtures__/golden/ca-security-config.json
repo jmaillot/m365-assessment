@@ -1,0 +1,202 @@
+[
+  {
+    "category": "Conditional Access",
+    "setting": "MFA Required for Admin Roles",
+    "currentValue": "Yes (1 admin-role-targeted policy: Admin MFA baseline)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-MFA-ADMIN-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "MFA Required for All Users",
+    "currentValue": "Yes (4 policy: All Users MFA; User Risk Policy; Sign-in Risk Policy; All Users MFA with exclusions)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-MFA-ALL-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Legacy Authentication Blocked",
+    "currentValue": "Yes (1 policy: Legacy Block)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-LEGACYAUTH-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Sign-in Frequency for Admin Roles",
+    "currentValue": "Yes (1 policy: Admin Session Freq)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-SIGNIN-FREQ-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Phishing-Resistant MFA for Admins",
+    "currentValue": "Yes (1 policy: Phishing Resistant Admins)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-PHISHRES-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "User Risk Policy Configured",
+    "currentValue": "Yes (2 policy: User Risk Policy; Combined Risk)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-USERRISK-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Sign-in Risk Policy Configured",
+    "currentValue": "Yes (3 policy: Sign-in Risk Policy; Block Medium High Risk; Combined Risk)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-SIGNINRISK-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Sign-in Risk Blocks Medium+High",
+    "currentValue": "Yes (2 policy: Sign-in Risk Policy; Block Medium High Risk)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-SIGNINRISK-002.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Managed Device Required",
+    "currentValue": "Yes (2 policy: Require Compliant Device; SecInfo Registration Device)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-DEVICE-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Managed Device for Security Info Registration",
+    "currentValue": "Yes (1 policy: SecInfo Registration Device)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-DEVICE-002.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Sign-in Frequency for Intune Enrollment",
+    "currentValue": "Yes (1 policy: Intune Enrollment Freq)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-INTUNE-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Device Code Flow Blocked",
+    "currentValue": "Yes (1 policy: Block Device Code Flow)",
+    "recommendedValue": "At least 1 policy",
+    "status": "Pass",
+    "checkId": "CA-DEVICECODE-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Report-Only Policies",
+    "currentValue": "1 policies in report-only: Report Only Legacy",
+    "recommendedValue": "Review and promote or remove",
+    "status": "Warning",
+    "checkId": "CA-REPORTONLY-001.1",
+    "remediation": "Review report-only policies and either enable enforcement or remove if no longer needed. Entra admin center > Protection > Conditional Access.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Trusted IP Named Locations",
+    "currentValue": "1 trusted IP locations: HQ Public IPs",
+    "recommendedValue": "Prefer compliant network or country-based locations",
+    "status": "Review",
+    "checkId": "CA-NAMEDLOC-001.1",
+    "remediation": "IP-based trusted locations can be spoofed via VPN or proxy. Consider Global Secure Access compliant network checks or country-based locations for stronger assurance. Entra admin center > Protection > Conditional Access > Named locations.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Persistent Browser Without Device Compliance",
+    "currentValue": "None",
+    "recommendedValue": "No persistent sessions without device compliance",
+    "status": "Pass",
+    "checkId": "CA-SESSION-001.1",
+    "remediation": "No action needed.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Combined Risk Policy Anti-Pattern",
+    "currentValue": "1 policies combine both risk types: Combined Risk",
+    "recommendedValue": "Separate sign-in risk and user risk into distinct policies",
+    "status": "Warning",
+    "checkId": "CA-RISKPOLICY-001.1",
+    "remediation": "Combining sign-in risk and user risk in one CA policy creates an AND condition -- both must be true to trigger. Microsoft recommends separate policies for each risk type. Entra admin center > Protection > Conditional Access.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Tier-0 Role Coverage in CA Policies",
+    "currentValue": "1 of 2 active Tier-0 roles not targeted by any CA policy",
+    "recommendedValue": "All active privileged roles covered",
+    "status": "Warning",
+    "checkId": "CA-ROLECOVERAGE-001.1",
+    "remediation": "Add the uncovered role IDs to existing admin-targeted CA policies. Entra admin center > Protection > Conditional Access > Select policy > Users > Include roles.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "CA Policies with Empty Include Targets",
+    "currentValue": "1 enabled policies have no include targets: Empty Target Policy",
+    "recommendedValue": "All enabled CA policies should target at least one user, group, or role",
+    "status": "Warning",
+    "checkId": "CA-FALLBACK-001.1",
+    "remediation": "Enabled CA policies with no include targets apply to no users and create operational noise. Configure meaningful include targets or disable the policy. Entra admin center > Protection > Conditional Access.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Stale Named Location References in CA Policies",
+    "currentValue": "1 policies reference deleted named locations: Stale Location Ref",
+    "recommendedValue": "All referenced named locations should exist",
+    "status": "Fail",
+    "checkId": "CA-NAMEDLOC-002.1",
+    "remediation": "The referenced named locations have been deleted. These policies may not evaluate correctly, creating unpredictable enforcement. Update or remove the stale location references. Entra admin center > Protection > Conditional Access > Named locations.",
+    "intentDesign": false
+  },
+  {
+    "category": "Conditional Access",
+    "setting": "Stale Group References in CA Policies",
+    "currentValue": "1 policies reference deleted groups: Group Targeted",
+    "recommendedValue": "All referenced groups should exist",
+    "status": "Fail",
+    "checkId": "CA-STALEREF-001.1",
+    "remediation": "CA policies with deleted group references may not enforce correctly, creating silent security gaps. Remove or replace the stale group references. Entra admin center > Protection > Conditional Access.",
+    "intentDesign": false
+  }
+]

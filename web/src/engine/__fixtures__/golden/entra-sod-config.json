@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Separation of Duties",
+    "setting": "Critical Role Separation (Global Admin vs Privileged Role Admin)",
+    "currentValue": "Global Admins: 2, Priv Role Admins: 1, Overlap: 0",
+    "recommendedValue": "At least 2 Global Admins, no user holding both roles",
+    "status": "Pass",
+    "checkId": "ENTRA-SOD-001.1",
+    "remediation": "Ensure Global Administrator and Privileged Role Administrator roles are assigned to separate accounts. Entra admin center > Identity > Roles & admins. Enable PIM approval workflows for role activation.",
+    "intentDesign": false
+  }
+]

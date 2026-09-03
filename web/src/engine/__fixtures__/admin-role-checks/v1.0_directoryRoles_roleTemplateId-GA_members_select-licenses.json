@@ -1,0 +1,14 @@
+{
+  "value": [
+    {
+      "displayName": "Alice Admin",
+      "assignedLicenses": [
+        { "skuId": "05e9a617-0261-4cee-bb36-b42c3d50e6a0" }
+      ]
+    },
+    {
+      "displayName": "Bob OnPrem",
+      "assignedLicenses": []
+    }
+  ]
+}

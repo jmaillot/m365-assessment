@@ -1,0 +1,44 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#reports/authenticationMethods/userRegistrationDetails",
+  "value": [
+    {
+      "id": "r2",
+      "userPrincipalName": "carol@contoso.com",
+      "userDisplayName": "Carol Clark",
+      "isMfaRegistered": false,
+      "isMfaCapable": false,
+      "isPasswordlessCapable": false,
+      "isSsprRegistered": false,
+      "isSsprCapable": false,
+      "methodsRegistered": [],
+      "defaultMfaMethod": null,
+      "isAdmin": false
+    },
+    {
+      "id": "r1",
+      "userPrincipalName": "alice@contoso.com",
+      "userDisplayName": "Alice Anderson",
+      "isMfaRegistered": true,
+      "isMfaCapable": true,
+      "isPasswordlessCapable": false,
+      "isSsprRegistered": true,
+      "isSsprCapable": true,
+      "methodsRegistered": ["microsoftAuthenticatorPush", "fido2"],
+      "defaultMfaMethod": "push",
+      "isAdmin": true
+    },
+    {
+      "id": "r3",
+      "userPrincipalName": "bob@contoso.com",
+      "userDisplayName": "Bob Brown",
+      "isMfaRegistered": true,
+      "isMfaCapable": true,
+      "isPasswordlessCapable": false,
+      "isSsprRegistered": false,
+      "isSsprCapable": false,
+      "methodsRegistered": ["mobilePhone"],
+      "defaultMfaMethod": "phone",
+      "isAdmin": false
+    }
+  ]
+}

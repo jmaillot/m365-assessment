@@ -1,0 +1,21 @@
+{
+  "id": "authenticationMethodsPolicy",
+  "registrationEnforcement": {
+    "authenticationMethodsRegistrationCampaign": {
+      "state": "enabled"
+    }
+  },
+  "authenticationMethodConfigurations": [
+    { "id": "Sms", "state": "disabled" },
+    { "id": "Voice", "state": "disabled" },
+    { "id": "Email", "state": "disabled" },
+    {
+      "id": "MicrosoftAuthenticator",
+      "state": "enabled",
+      "featureSettings": {
+        "numberMatchingRequiredState": { "state": "enabled", "excludeTarget": {} },
+        "displayAppInformationRequiredState": { "state": "enabled", "excludeTarget": {} }
+      }
+    }
+  ]
+}

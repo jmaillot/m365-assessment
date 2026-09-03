@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1787571482665,
+      "tag": "0000_abnormal_dakota_north",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787755870800,
+      "tag": "0004_operator_credential",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787755870800,
+      "tag": "0005_runs_check_rows",
+      "breakpoints": true
+    }
+  ]
+}

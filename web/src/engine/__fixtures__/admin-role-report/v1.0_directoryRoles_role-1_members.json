@@ -1,0 +1,17 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryRoles('role-1')/members",
+  "value": [
+    {
+      "id": "sp-1",
+      "displayName": "Backup Bot",
+      "@odata.type": "#microsoft.graph.servicePrincipal",
+      "appId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+    },
+    {
+      "id": "u1",
+      "displayName": "Alice Anderson",
+      "userPrincipalName": "alice@contoso.com",
+      "@odata.type": "#microsoft.graph.user"
+    }
+  ]
+}

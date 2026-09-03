@@ -1,0 +1,14 @@
+{
+  "value": [
+    {
+      "id": "u1",
+      "displayName": "Alice Admin",
+      "userPrincipalName": "alice@contoso.com"
+    },
+    {
+      "id": "u4",
+      "displayName": "Bob OnPrem",
+      "userPrincipalName": "bob@contoso.com"
+    }
+  ]
+}

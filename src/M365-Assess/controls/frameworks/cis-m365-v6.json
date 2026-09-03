@@ -1,0 +1,79 @@
+{
+  "frameworkId": "cis-m365-v6",
+  "label": "CIS Microsoft 365 Foundations Benchmark v6.0.1",
+  "version": "6.0.1",
+  "description": "Prescriptive configuration recommendations for Microsoft 365 services, organized into L1/L2 profiles and E3/E5 licensing tiers. Maintained by the Center for Internet Security.",
+  "homepageUrl": "https://www.cisecurity.org/benchmark/microsoft_365",
+  "css": "fw-cis",
+  "totalControls": 139,
+  "registryKey": "cis-m365-v6",
+  "csvColumn": "Cis",
+  "displayOrder": 1,
+  "scoring": {
+    "method": "profile-compliance",
+    "profiles": {
+      "E3-L1": {
+        "label": "CIS E3 Level 1",
+        "css": "fw-cis",
+        "profileKey": "E3-L1"
+      },
+      "E3-L2": {
+        "label": "CIS E3 Level 2",
+        "css": "fw-cis-l2",
+        "profileKey": "E3-L2",
+        "colors": {
+          "light": {
+            "background": "#dbeafe",
+            "color": "#1e40af"
+          },
+          "dark": {
+            "background": "#1E3A5F",
+            "color": "#60A5FA"
+          }
+        }
+      },
+      "E5-L1": {
+        "label": "CIS E5 Level 1",
+        "css": "fw-cis",
+        "profileKey": "E5-L1"
+      },
+      "E5-L2": {
+        "label": "CIS E5 Level 2",
+        "css": "fw-cis-l2",
+        "profileKey": "E5-L2",
+        "colors": {
+          "light": {
+            "background": "#dbeafe",
+            "color": "#1e40af"
+          },
+          "dark": {
+            "background": "#1E3A5F",
+            "color": "#60A5FA"
+          }
+        }
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "background": "#e8f0fe",
+      "color": "#1a56db"
+    },
+    "dark": {
+      "background": "#1E3A5F",
+      "color": "#93C5FD"
+    }
+  },
+  "groupBy": "section-prefix",
+  "sections": {
+    "1": "Identity",
+    "2": "Defender",
+    "3": "Purview",
+    "4": "Intune",
+    "5": "Entra ID",
+    "6": "Exchange Online",
+    "7": "SharePoint & OneDrive",
+    "8": "Teams",
+    "9": "Fabric (Power BI)"
+  }
+}

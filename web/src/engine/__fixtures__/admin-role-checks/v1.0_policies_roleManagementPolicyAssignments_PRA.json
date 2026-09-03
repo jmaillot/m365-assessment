@@ -1,0 +1,16 @@
+{
+  "value": [
+    {
+      "id": "pa-pra",
+      "policy": {
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "isEnabled": true,
+            "maximumDuration": "P30D"
+          }
+        ]
+      }
+    }
+  ]
+}

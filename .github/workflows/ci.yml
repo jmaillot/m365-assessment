@@ -1,0 +1,433 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    if: github.event_name != 'schedule'
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v7
+      # Third-party action pinned by commit SHA for supply-chain hardening (#768).
+      # First-party actions/* stay on tag pins.
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706  # v4.0.2
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'src/**'
+              - 'tests/**'
+              - '.github/workflows/ci.yml'
+              - 'PSScriptAnalyzerSettings.psd1'
+            docs:
+              - 'README.md'
+              - 'CHANGELOG.md'
+              - 'AUTHENTICATION.md'
+              - 'SECURITY.md'
+              - 'COMPLIANCE.md'
+              - 'docs/**'
+              - 'package.json'
+              - 'package-lock.json'
+
+  # Lightweight job that runs only the version-consistency check when a PR
+  # touches docs that gate version messaging but does NOT touch code (#776).
+  # When code changes, the full quality-gates job runs version-consistency
+  # itself, so we skip this job to avoid duplicating the check.
+  docs-gates:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true' && needs.changes.outputs.code != 'true'
+    name: Docs Gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Version consistency
+        shell: pwsh
+        run: |
+          $manifest = Import-PowerShellDataFile -Path ./src/M365-Assess/M365-Assess.psd1
+          $expected = $manifest.ModuleVersion
+          Write-Host "Manifest version: $expected"
+
+          $failures = @()
+          $esc = [regex]::Escape($expected)
+
+          # README badge
+          $readme = Get-Content ./README.md -Raw
+          if ($readme -notmatch "version-$esc-") {
+            $failures += 'README.md badge'
+          }
+
+          if ($failures.Count -gt 0) {
+            Write-Host "`nVersion issues:" -ForegroundColor Red
+            $failures | ForEach-Object { Write-Host "  - $_" -ForegroundColor Yellow }
+            Write-Error "$($failures.Count) version issue(s) found"
+            exit 1
+          }
+
+          Write-Host "Version consistency: manifest=$expected, README badge matches" -ForegroundColor Green
+
+  quality-gates:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    name: Quality Gates
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/cache@v6
+        with:
+          path: C:\Users\runneradmin\Documents\PowerShell\Modules
+          key: psmodules-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: psmodules-${{ runner.os }}-
+
+      - name: Install modules
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          Install-Module Pester -Force -Scope CurrentUser -MinimumVersion 5.0.0
+
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path ./src/M365-Assess -Settings ./PSScriptAnalyzerSettings.psd1 -Recurse |
+            Where-Object { $_.ScriptName -notlike '*.Tests.ps1' }
+          $results | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize -Wrap
+
+          $errors = $results | Where-Object { $_.Severity -in 'Error', 'Warning' }
+          if ($errors.Count -gt 0) {
+            Write-Error "$($errors.Count) PSScriptAnalyzer issue(s) found"
+            exit 1
+          }
+          Write-Host "PSScriptAnalyzer: All checks passed" -ForegroundColor Green
+
+      - name: JS build check
+        shell: bash
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+          node --check src/M365-Assess/assets/report-app.js
+          if git diff --name-only | grep -q "report-app.js"; then
+            echo "::error::report-app.js is out of sync with report-app.jsx — run 'npm run build' and commit the result"
+            git diff src/M365-Assess/assets/report-app.js | head -60
+            exit 1
+          fi
+          echo "JS build check passed — report-app.js matches Babel output"
+
+      - name: npm audit (advisory)
+        shell: bash
+        # C4 #783: surface HIGH-or-above advisories without blocking the PR.
+        # Babel devDependencies don't ship to end users; runtime React/ReactDOM
+        # are pinned + committed and not subject to transitive npm advisories.
+        # Rationale + cadence: docs/REPORT-FRONTEND.md.
+        run: |
+          set +e
+          npm audit --audit-level=high
+          AUDIT_EXIT=$?
+          set -e
+          if [ "$AUDIT_EXIT" -ne 0 ]; then
+            echo "::warning::npm audit found HIGH-or-above advisories (advisory; not blocking). See docs/REPORT-FRONTEND.md for the response cadence."
+          else
+            echo "npm audit: no HIGH-or-above advisories"
+          fi
+
+      - name: Smoke tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = @(
+            './tests/Smoke/Script-Validation.Tests.ps1'
+            './tests/Smoke/PSGallery-Readiness.Tests.ps1'
+            './tests/Smoke/Collector-ReadOnly.Tests.ps1'
+            './tests/Smoke/Permissions-Matrix.Tests.ps1'
+            './tests/Smoke/Fixtures-Convention.Tests.ps1'
+            './tests/Consistency'
+            './tests/Common/Export-AssessmentReport.Tests.ps1'
+            './tests/Common/Import-ControlRegistry.Tests.ps1'
+            './tests/Common/Import-FrameworkDefinitions.Tests.ps1'
+            './tests/controls'
+          )
+          $config.Run.Exit = $true
+          $config.Output.Verbosity = 'Detailed'
+          Invoke-Pester -Configuration $config
+
+      - name: Permissions matrix in sync
+        shell: pwsh
+        run: |
+          # B7 #778: docs/PERMISSIONS.md is generated from AssessmentMaps.ps1 +
+          # PermissionDefinitions.ps1. Fail any PR that modifies the source maps
+          # without regenerating the doc.
+          ./scripts/Build-PermissionsMatrix.ps1 -Check
+
+      - name: Registry stats in sync
+        shell: pwsh
+        run: |
+          # Public check counts and framework coverage stats (README,
+          # controls/README, COMPLIANCE.md, docs/reference/COVERAGE.md) are
+          # generated from controls/registry.json. Fail any PR that changes
+          # registry data without regenerating the docs.
+          ./scripts/Build-RegistryStats.ps1 -Check
+
+      - name: Version consistency
+        shell: pwsh
+        run: |
+          $manifest = Import-PowerShellDataFile -Path ./src/M365-Assess/M365-Assess.psd1
+          $expected = $manifest.ModuleVersion
+          Write-Host "Manifest version: $expected"
+
+          $failures = @()
+          $esc = [regex]::Escape($expected)
+
+          # README badge
+          $readme = Get-Content ./README.md -Raw
+          if ($readme -notmatch "version-$esc-") {
+            $failures += 'README.md badge'
+          }
+
+          # Verify runtime readers use Import-PowerShellDataFile (not hardcoded)
+          $orch = Get-Content ./src/M365-Assess/Invoke-M365Assessment.ps1 -Raw
+          if ($orch -notmatch 'Import-PowerShellDataFile') {
+            $failures += 'Invoke-M365Assessment.ps1 should read version from manifest'
+          }
+
+          $report = Get-Content ./src/M365-Assess/Common/Export-AssessmentReport.ps1 -Raw
+          if ($report -notmatch 'Import-PowerShellDataFile') {
+            $failures += 'Export-AssessmentReport.ps1 should read version from manifest'
+          }
+
+          if ($failures.Count -gt 0) {
+            Write-Host "`nVersion issues:" -ForegroundColor Red
+            $failures | ForEach-Object { Write-Host "  - $_" -ForegroundColor Yellow }
+            Write-Error "$($failures.Count) version issue(s) found"
+            exit 1
+          }
+
+          Write-Host "Version consistency: manifest=$expected, README badge matches, runtime readers use manifest" -ForegroundColor Green
+
+  test:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    name: Pester Tests (PS ${{ matrix.ps-version }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ps-version: ['7.4', '7.6']
+    env:
+      COVERAGE_THRESHOLD: 65
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/cache@v6
+        with:
+          path: C:\Users\runneradmin\Documents\PowerShell\Modules
+          key: psmodules-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: psmodules-${{ runner.os }}-
+
+      - name: Install PowerShell ${{ matrix.ps-version }}
+        shell: pwsh
+        run: |
+          $target = '${{ matrix.ps-version }}'
+          $current = $PSVersionTable.PSVersion
+          Write-Host "Current PowerShell: $current"
+          if ("$current" -like "$target*") {
+            Write-Host "Already running PowerShell $target -- skipping install"
+          } else {
+            Write-Host "Installing PowerShell $target..."
+            dotnet tool install --global PowerShell --version "$target.*"
+          }
+
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -Force -Scope CurrentUser -MinimumVersion 5.0.0
+
+      - name: Run Pester
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests'
+          $config.Run.Exit = $true
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = './test-results.xml'
+          $config.TestResult.OutputFormat = 'NUnitXml'
+          $config.CodeCoverage.Enabled = '${{ matrix.ps-version }}' -eq '7.6'
+          $config.CodeCoverage.Path = @('./src/M365-Assess/Invoke-M365Assessment.ps1', './src/M365-Assess/Common/', './src/M365-Assess/Entra/', './src/M365-Assess/Exchange-Online/', './src/M365-Assess/Security/', './src/M365-Assess/Intune/', './src/M365-Assess/Collaboration/', './src/M365-Assess/PowerBI/', './src/M365-Assess/Purview/', './src/M365-Assess/SOC2/', './src/M365-Assess/ActiveDirectory/', './src/M365-Assess/Orchestrator/', './src/M365-Assess/Inventory/')
+          $config.CodeCoverage.OutputPath = './coverage.xml'
+          $config.CodeCoverage.OutputFormat = 'JaCoCo'
+          $config.Output.Verbosity = if ('${{ matrix.ps-version }}' -eq '7.6') { 'Detailed' } else { 'Normal' }
+          Invoke-Pester -Configuration $config
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-ps${{ matrix.ps-version }}
+          path: test-results.xml
+
+      - name: Upload coverage report
+        if: always() && matrix.ps-version == '7.6'
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report-ps${{ matrix.ps-version }}
+          path: coverage.xml
+
+      - name: Coverage gate
+        if: always() && matrix.ps-version == '7.6'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path './coverage.xml')) {
+            Write-Host 'No coverage.xml found'
+            exit 0
+          }
+          [xml]$report = Get-Content './coverage.xml'
+
+          # Line coverage
+          $lineCounter = $report.report.counter | Where-Object { $_.type -eq 'LINE' }
+          $lineMissed = [int]$lineCounter.missed
+          $lineCovered = [int]$lineCounter.covered
+          $lineTotal = $lineMissed + $lineCovered
+          $linePct = if ($lineTotal -gt 0) { [math]::Round(($lineCovered / $lineTotal) * 100, 1) } else { 0 }
+
+          # Branch coverage
+          $branchCounter = $report.report.counter | Where-Object { $_.type -eq 'BRANCH' }
+          $branchPct = 0
+          $branchCovered = 0
+          $branchTotal = 0
+          if ($branchCounter) {
+            $branchMissed = [int]$branchCounter.missed
+            $branchCovered = [int]$branchCounter.covered
+            $branchTotal = $branchMissed + $branchCovered
+            $branchPct = if ($branchTotal -gt 0) { [math]::Round(($branchCovered / $branchTotal) * 100, 1) } else { 0 }
+          }
+
+          # Step summary
+          $summary = @"
+          ### Code Coverage
+          | Metric | Covered | Total | Percentage |
+          |--------|---------|-------|------------|
+          | Lines | $lineCovered | $lineTotal | **$linePct%** |
+          | Branches | $branchCovered | $branchTotal | **$branchPct%** |
+
+          Threshold: ${{ env.COVERAGE_THRESHOLD }}%
+          "@
+          $summary >> $env:GITHUB_STEP_SUMMARY
+
+          Write-Host "Line coverage: $lineCovered / $lineTotal ($linePct%)"
+          Write-Host "Branch coverage: $branchCovered / $branchTotal ($branchPct%)"
+          Write-Host "Threshold: ${{ env.COVERAGE_THRESHOLD }}%"
+
+          if ($linePct -lt ${{ env.COVERAGE_THRESHOLD }}) {
+            Write-Error "Line coverage $linePct% is below threshold ${{ env.COVERAGE_THRESHOLD }}%"
+            exit 1
+          }
+          Write-Host "Coverage gate passed" -ForegroundColor Green
+
+  cross-platform-smoke:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    name: Cross-Platform Smoke (${{ matrix.os }})
+    # B6 #777: catches platform-shaped bugs (path separators, case-sensitivity in
+    # dot-source paths, line endings) without paying the heavy install cost of
+    # Microsoft.Graph + EXO modules. Pester-on-Windows in `test` remains the
+    # source of truth; this lane just verifies that the parts of the module
+    # that DON'T require the Graph SDK still load on Linux + macOS.
+    #
+    # Advisory initially -- not part of the `ci-status` aggregator that drives
+    # branch protection. Promote to required by adding to `ci-status.needs`
+    # after one stable green run.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -Force -Scope CurrentUser -MinimumVersion 5.0.0
+
+      - name: Run cross-platform smoke
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests/Smoke/Cross-Platform.Tests.ps1'
+          $config.Run.Exit = $true
+          $config.Output.Verbosity = 'Detailed'
+          Invoke-Pester -Configuration $config
+
+  ci-status:
+    name: CI
+    needs: [quality-gates, test, docs-gates]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          qg="${{ needs.quality-gates.result }}"
+          t="${{ needs.test.result }}"
+          d="${{ needs.docs-gates.result }}"
+          if [[ "$qg" == "success" || "$qg" == "skipped" ]] && \
+             [[ "$t"  == "success" || "$t"  == "skipped" ]] && \
+             [[ "$d"  == "success" || "$d"  == "skipped" ]]; then
+            echo "CI passed (quality-gates=$qg, test=$t, docs-gates=$d)"
+          else
+            echo "CI failed (quality-gates=$qg, test=$t, docs-gates=$d)"
+            exit 1
+          fi
+
+  sync-checkid:
+    name: Sync CheckID Fallback Cache
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Fetch CheckID data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=$(gh api repos/Galvnyz/CheckID/tags --jq '.[0].name')
+          echo "Syncing from CheckID $TAG"
+          BASE="https://raw.githubusercontent.com/Galvnyz/CheckID/$TAG/data"
+          curl -sL "$BASE/registry.json" -o src/M365-Assess/controls/registry.json
+          for f in cis-controls-v8 cis-m365-v6 cisa-scuba cmmc essential-eight fedramp hipaa iso-27001 mitre-attack nist-800-53-r5 nist-csf pci-dss-v4 soc2-tsc stig; do
+            curl -sL "$BASE/frameworks/$f.json" -o "src/M365-Assess/controls/frameworks/$f.json"
+          done
+
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet src/M365-Assess/controls/ && echo "changed=false" >> "$GITHUB_OUTPUT" \
+            || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Report status
+        run: |
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "::warning::CheckID data has updates — open a PR to sync controls/"
+            git diff --stat src/M365-Assess/controls/
+          else
+            echo "CheckID data is up to date"
+          fi

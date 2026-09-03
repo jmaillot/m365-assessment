@@ -1,0 +1,16 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#organization",
+  "value": [
+    {
+      "id": "6d77f37b-bbbb-4a35-9cbb-ef1e5f4d0b47",
+      "displayName": "Contoso Ltd",
+      "createdDateTime": "2021-03-04T19:46:05Z",
+      "onPremisesSyncEnabled": true,
+      "onPremisesLastSyncDateTime": "2026-08-20T01:12:33Z",
+      "onPremisesLastPasswordSyncDateTime": null,
+      "onPremisesProvisioningErrors": [
+        { "id": "err-1", "category": "PropertyConflict", "value": "contoso.com" }
+      ]
+    }
+  ]
+}

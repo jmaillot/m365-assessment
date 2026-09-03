@@ -1,0 +1,23 @@
+{
+  "value": [
+    {
+      "id": "pa-ga",
+      "policy": {
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "isEnabled": true,
+            "maximumDuration": "PT8H"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+            "setting": {
+              "isApprovalRequired": true,
+              "approvers": []
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

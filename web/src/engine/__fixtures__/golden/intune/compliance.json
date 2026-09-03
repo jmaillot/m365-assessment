@@ -1,0 +1,18 @@
+[
+  {
+    "category": "Device Compliance",
+    "setting": "Non-Compliant Default Threshold",
+    "currentValue": "30 days",
+    "recommendedValue": "Devices without policy marked non-compliant",
+    "status": "Pass",
+    "checkId": "INTUNE-COMPLIANCE-001.1",
+    "remediation": "Portal: Intune admin center > Devices > Compliance > Compliance policy settings > Mark devices with no compliance policy assigned as > Not compliant",
+    "intentDesign": false,
+    "observedValue": "30",
+    "expectedValue": "<=30",
+    "evidenceSource": "/v1.0/deviceManagement/settings",
+    "collectionMethod": "Direct",
+    "permissionRequired": "DeviceManagementConfiguration.Read.All",
+    "confidence": 1
+  }
+]
