@@ -148,15 +148,15 @@ describe("buildReportData", () => {
     expect(remOrder).not.toContain("Info1");
   });
 
-  it("frameworks array length is 16 with real loaders and each entry has valid score fields", () => {
+  it("frameworks array length is 15 with real loaders and each entry has valid score fields", () => {
     // Use a real golden fixture with real loaders end-to-end
     const fixture = loadGolden("ca-security-config.json");
     const data = buildReportData(toRows(fixture));
     // frameworks from real loaders
-    expect(data.frameworks).toHaveLength(16);
-    // also verify loadFrameworks directly yields 16
+    expect(data.frameworks).toHaveLength(15);
+    // also verify loadFrameworks directly yields 15
     const fws = loadFrameworks();
-    expect(fws).toHaveLength(16);
+    expect(fws).toHaveLength(15);
 
     for (const fw of data.frameworks) {
       expect(typeof fw.id).toBe("string");
@@ -207,7 +207,7 @@ describe("buildReportData", () => {
     expect(entraData.coverage.label).toContain("Entra ID");
     expect(entraData.coverage.label).toMatch(/Partial score — includes .*checks only\./);
     // frameworks strings appear in test file
-    expect(entraData.frameworks.length).toBe(16);
+    expect(entraData.frameworks.length).toBe(15);
 
     // Add a synthetic EXO row — domainsPresent should expand
     const mixedRows: CheckRow[] = [
@@ -343,9 +343,9 @@ describe("buildReportData", () => {
     const rows: CheckRow[] = [
       { category: "C", setting: "S", currentValue: "", recommendedValue: "", status: "Pass", checkId: "ENTRA-AUTHMETHOD-001.1", remediation: "", intentDesign: false },
     ];
-    // No deps injected → default loaders should run and produce 16 frameworks
+    // No deps injected → default loaders should run and produce 15 frameworks
     const data = buildReportData(toRows(rows));
-    expect(data.frameworks).toHaveLength(16);
+    expect(data.frameworks).toHaveLength(15);
     // Severity enrichment should populate for known check
     const enriched = data.findings.find((f) => f.checkId === "ENTRA-AUTHMETHOD-001.1");
     // ENTRA-AUTHMETHOD-001 exists in risk-severity.json as Critical
@@ -377,7 +377,7 @@ describe("buildReportData", () => {
     expect(data.findings).toHaveLength(10);
     expect(data.coverage.domainsPresent).toContain("Entra ID");
     expect(data.coverage.domainsPresent).toContain("Power BI");
-    expect(data.frameworks).toHaveLength(16);
+    expect(data.frameworks).toHaveLength(15);
     // Reconstruct per-domain counts from findings via getCheckDomain (harness logic)
     const counts = new Map<string, number>();
     for (const f of data.findings) counts.set(f.domain, (counts.get(f.domain) ?? 0) + 1);

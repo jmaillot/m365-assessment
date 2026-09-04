@@ -1,0 +1,161 @@
+name: Sync CheckID registry
+
+# Pulls the control registry + framework definitions from the upstream CheckID
+# repo (Galvnyz/CheckID, stable tags only) into src/M365-Assess/controls/.
+# Runs weekly + on manual dispatch. Pushes straight to master when changed
+# (single-maintainer repo — no PR ceremony).
+#
+# Deliberately NOT fetched (absent upstream, kept as local files):
+# - frameworks/cis-m365-v7.json → archived at frameworks/_archive/
+# - frameworks/iso-27002.json → kept as-is
+#
+# --fail on every curl: a 404 must fail loudly, never be written into a .json
+# file as a "404: Not Found" stub.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "CheckID tag to sync (empty = latest stable release)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync CheckID registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve CheckID tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG=$(gh api repos/Galvnyz/CheckID/releases/latest --jq .tag_name)
+          fi
+          echo "Syncing from CheckID $TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch CheckID data
+        run: |
+          BASE="https://raw.githubusercontent.com/Galvnyz/CheckID/${{ steps.tag.outputs.tag }}/data"
+          curl -sSL --fail "$BASE/registry.json" -o src/M365-Assess/controls/registry.json
+          curl -sSL --fail "$BASE/sku-feature-map.json" -o src/M365-Assess/controls/sku-feature-map.json
+          curl -sSL --fail "$BASE/cmmc-ez-handoff.json" -o src/M365-Assess/controls/cmmc-ez-handoff.json
+          for f in cis-controls-v8 cis-m365-v6 cisa-scuba cmmc essential-eight fedramp hipaa iso-27001 mitre-attack nist-800-53-r5 nist-csf pci-dss-v4 soc2-tsc stig; do
+            curl -sSL --fail "$BASE/frameworks/$f.json" -o "src/M365-Assess/controls/frameworks/$f.json"
+          done
+
+      - name: Normalize encoding in downloaded files
+        run: |
+          python3 - <<'EOF'
+          import glob
+
+          # Only apply CP1252 byte fixes to files that are NOT already valid UTF-8.
+          cp1252_fixes = {
+              bytes([0x97]): '\u2014'.encode('utf-8'),  # em dash
+              bytes([0x96]): '\u2013'.encode('utf-8'),  # en dash
+              bytes([0xa7]): '\u00a7'.encode('utf-8'),  # section sign
+              bytes([0xa9]): '\u00a9'.encode('utf-8'),  # copyright
+              bytes([0xae]): '\u00ae'.encode('utf-8'),  # registered
+          }
+
+          files = glob.glob('src/M365-Assess/controls/frameworks/*.json')
+          files.append('src/M365-Assess/controls/registry.json')
+          for path in files:
+              raw = open(path, 'rb').read()
+              try:
+                  raw.decode('utf-8')
+                  continue  # already valid UTF-8, skip
+              except UnicodeDecodeError:
+                  pass
+              fixed = raw
+              for bad, good in cp1252_fixes.items():
+                  fixed = fixed.replace(bad, good)
+              if fixed != raw:
+                  open(path, 'wb').write(fixed)
+                  print(f'Encoding fixed: {path}')
+          EOF
+
+      - name: Filter registry to M365 collector scope
+        run: |
+          python3 - <<'EOF'
+          import json
+
+          with open('src/M365-Assess/controls/sync-scope.json', encoding='utf-8') as f:
+              scope = set(json.load(f)['collectors'])
+
+          path = 'src/M365-Assess/controls/registry.json'
+          with open(path, encoding='utf-8') as f:
+              reg = json.load(f)
+
+          before = len(reg['checks'])
+          # Keep checks whose collector is in scope; checks without a collector
+          # field are kept (they cannot be classified as out-of-scope).
+          reg['checks'] = [c for c in reg['checks']
+                           if c.get('collector') is None or c['collector'] in scope]
+          dropped = before - len(reg['checks'])
+
+          with open(path, 'w', encoding='utf-8') as f:
+              json.dump(reg, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          print(f"Registry scoped to M365: kept {len(reg['checks'])}, dropped {dropped} out-of-scope checks")
+          EOF
+
+      - name: Merge local extension checks
+        run: |
+          python3 - <<'EOF'
+          import json
+
+          with open('src/M365-Assess/controls/registry.json', encoding='utf-8') as f:
+              reg = json.load(f)
+
+          with open('src/M365-Assess/controls/local-extensions.json', encoding='utf-8') as f:
+              local = json.load(f)
+
+          existing_ids = {c['checkId'] for c in reg['checks']}
+          added = []
+          for check in local:
+              if check['checkId'] not in existing_ids:
+                  reg['checks'].append(check)
+                  added.append(check['checkId'])
+
+          with open('src/M365-Assess/controls/registry.json', 'w', encoding='utf-8') as f:
+              json.dump(reg, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          if added:
+              print(f"Merged {len(added)} local extension checks: {', '.join(added)}")
+          else:
+              print("All local extension checks already present in upstream registry")
+          EOF
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet src/M365-Assess/controls/; then
+            echo "No changes — nothing to do"
+          else
+            git add src/M365-Assess/controls/
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: sync CheckID registry to ${{ steps.tag.outputs.tag }}"
+            git push origin HEAD:master
+          fi
+
+      - name: Summary
+        run: |
+          if git diff --quiet src/M365-Assess/controls/ 2>/dev/null; then
+            echo "### CheckID ${{ steps.tag.outputs.tag }} — no changes detected" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### CheckID ${{ steps.tag.outputs.tag }} synced to master" >> "$GITHUB_STEP_SUMMARY"
+          fi
