@@ -60,5 +60,16 @@ CIS_Microsoft_365*.pdf
 # PS report build — not needed for Docker minimal (web uses Next.js)
 babel.config.json
 
- # Github workflows
+# Slim repo — PowerShell-era paths removed from git, keep out
+docs/
+tests/
+Setup/
+scripts/
+CHANGELOG.md
+CONTRIBUTING.md
+SECURITY.md
+THIRD-PARTY-LICENSES.md
+PSScriptAnalyzerSettings.psd1
+
+# Github workflows
 .github/
