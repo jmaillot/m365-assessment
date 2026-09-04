@@ -26,9 +26,9 @@ function sha256File(path: string): string {
 }
 
 describe("loadRegistry", () => {
-  it("loads registry.json unmodified with exactly 292 checks (FRM-01)", () => {
+  it("loads registry.json unmodified with exactly 293 checks (FRM-01)", () => {
     const registry = loadRegistry();
-    expect(registry.checks).toHaveLength(292);
+    expect(registry.checks).toHaveLength(293);
     expect(typeof registry.schemaVersion).toBe("string");
     // Spot-check parity against the source file parsed independently.
     const independent = JSON.parse(readFileSync(join(SOURCE_CONTROLS, "registry.json"), "utf8"));
