@@ -70,3 +70,13 @@ CONTRIBUTING.md
 SECURITY.md
 THIRD-PARTY-LICENSES.md
 PSScriptAnalyzerSettings.psd1
+
+# Legacy GitHub — keep local only (not in slim Docker repo)
+.github/CODEOWNERS
+.github/FUNDING.yml
+.github/ISSUE_TEMPLATE/
+.github/dependabot.yml
+.github/pull_request_template.md
+.github/workflows/ci.yml
+.github/workflows/release-candidate.yml
+.github/workflows/release.yml
