@@ -4,6 +4,13 @@ Multi-tenant SaaS (Next.js + TypeScript) — customers sign up, consent via Entr
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](docker-compose.yml)
+[![CI](https://github.com/your-org/m365-assess/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
+
+## Architecture (SaaS)
+
+`web/` is a Next.js 16 + TypeScript monolith. The assessment engine (`web/src/engine/`) runs 8 domain sections (Entra, Security, Intune, Exchange, Collaboration, Purview, Inventory, Power BI) against Microsoft Graph REST (read-only application permissions, paginated transport with 429/503 backoff). Results feed the report pipeline (`web/src/report/build-report-data.ts`) and are persisted per run (`runs`/`check_rows` via Drizzle + SQLite) for the dashboard at `/dashboard/runs/[id]` (Overview / Findings / Remediation / Reviews / Frameworks tabs, self-contained HTML + CSV export).
+
+Scoring reuses the control registry byte-unmodified: `src/M365-Assess/controls/registry.json` (**292 checks** mapped to 15 frameworks) plus `licensing-overlay.json` and `risk-severity.json`, loaded live by `web/src/engine/registry/load-controls.ts` (`controlsDir()` + `CONTROLS_DIR` override).
 
 ## 1. What you need
 - Docker + Docker Compose
@@ -73,6 +80,10 @@ curl -i http://localhost:3000/   # health
 3. **Run assessment** → Report at `/dashboard/runs/[id]` (`Overview`/`Findings`/`Remediation`/`Reviews`/`Frameworks`, `Export HTML` self-contained, `Export CSV` `;`)
 
 Settings → Rotate is allowlisted to `OPERATOR_ADMIN_EMAILS` only.
+
+## Legacy PowerShell module
+
+The original PowerShell module (`Install-Module M365-Assess`, PSGallery v2.13.0) is retired from this repo: superseded collectors were archived to the local `legacy/` folder (gitignored, never pushed to GitHub — created by Phase 8 plan 08-02). The GitHub-side archive is prior commits and tags (last PS release: v2.13.0). Per-domain audit: [docs/LEGACY-AUDIT.md](docs/LEGACY-AUDIT.md). Note `docs/` is local-only in this slim repo checkout. The live SaaS still reads `src/M365-Assess/controls/` and `src/M365-Assess/assets/sku-friendly-names.csv` from the tracked tree — those are data dependencies, not legacy code. PSGallery deprecation with a SaaS pointer is deferred until SaaS GA.
 
 ## License
 MIT — see [LICENSE](LICENSE).
