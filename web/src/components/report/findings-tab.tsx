@@ -15,6 +15,7 @@ import {
   StatusFilterDropdown,
   DEFAULT_SELECTED_STATUSES,
 } from "./findings-filters";
+import { mergeCategorySelection, mergeDomainSelection } from "./filter-selection";
 
 export function FindingsTab({ data }: { data: ReportData }) {
   const allDomains = React.useMemo(
@@ -32,17 +33,13 @@ export function FindingsTab({ data }: { data: ReportData }) {
   );
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
 
-  // Sync domain selection when data changes
-  React.useEffect(() => {
-    setSelectedDomains((prev) => {
-      if (prev.size === 0 && allDomains.length > 0) return new Set(allDomains);
-      const next = new Set(prev);
-      let changed = false;
-      for (const d of allDomains) if (!next.has(d)) { next.add(d); changed = true; }
-      for (const d of Array.from(next)) if (!allDomains.includes(d)) { next.delete(d); changed = true; }
-      return changed ? next : prev;
-    });
-  }, [allDomains]);
+  // Sync domain selection when data changes (render-phase adjustment:
+  // sanctioned derived-state pattern, avoids cascading renders from effects)
+  const [prevAllDomains, setPrevAllDomains] = React.useState(allDomains);
+  if (prevAllDomains !== allDomains) {
+    setPrevAllDomains(allDomains);
+    setSelectedDomains((prev) => mergeDomainSelection(prev, allDomains));
+  }
 
   // Available categories filtered by selected domains
   const availableCategorySet = React.useMemo(() => {
@@ -51,22 +48,14 @@ export function FindingsTab({ data }: { data: ReportData }) {
     return set;
   }, [data.findings, selectedDomains]);
 
-  React.useEffect(() => {
-    setSelectedCategories((prev) => {
-      if (prev.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      const next = new Set<string>();
-      // Keep only categories still available
-      for (const c of prev) if (availableCategorySet.has(c)) next.add(c);
-      // Add newly available categories
-      for (const c of availableCategorySet) if (!prev.has(c)) next.add(c);
-      // Guard non-empty
-      if (next.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      // Compare
-      if (next.size !== prev.size) return next;
-      for (const c of next) if (!prev.has(c)) return next;
-      return prev;
-    });
-  }, [availableCategorySet]);
+  const [prevAvailableCategories, setPrevAvailableCategories] =
+    React.useState(availableCategorySet);
+  if (prevAvailableCategories !== availableCategorySet) {
+    setPrevAvailableCategories(availableCategorySet);
+    setSelectedCategories((prev) =>
+      mergeCategorySelection(prev, availableCategorySet),
+    );
+  }
 
   const statusCounts = React.useMemo(() => {
     const c: Record<string, number> = { Pass: 0, Fail: 0, Warning: 0, Review: 0, Info: 0, Skipped: 0 };

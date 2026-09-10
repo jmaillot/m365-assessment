@@ -4,6 +4,10 @@ import { join } from "node:path";
 import { buildReportData, coverageLabelForDomains } from "./build-report-data";
 import type { CheckRow } from "@/engine/results/row-contract";
 import { loadFrameworks } from "@/engine/registry/load-controls";
+import type {
+  ControlRegistry,
+  FrameworkDefinition,
+} from "@/engine/registry/load-controls";
 
 function loadGolden(name: string): CheckRow[] {
   const p = join(
@@ -186,8 +190,8 @@ describe("buildReportData", () => {
       { category: "C", setting: "OnlyOneExecuted", currentValue: "", recommendedValue: "", status: "Pass", checkId: "ENTRA-TEST-001.1", remediation: "", intentDesign: false },
     ];
     const data = buildReportData(toRows(syntheticRows), {
-      registry: syntheticRegistry as any,
-      frameworks: syntheticFrameworks as any,
+      registry: syntheticRegistry as unknown as ControlRegistry,
+      frameworks: syntheticFrameworks as unknown as FrameworkDefinition[],
       riskSeverity: { checks: {} },
     });
     const cis = data.frameworks.find((f) => f.id === "cis-m365-v6");
@@ -270,8 +274,8 @@ describe("buildReportData", () => {
         { checkId: "PURVIEW-RETENTION-001", frameworks: { "cis-m365-v6": { controlId: "CIS-PUR-1" } } },
         { checkId: "POWERBI-GUEST-001", frameworks: { "cis-m365-v6": { controlId: "CIS-PBI-1" } } },
         { checkId: "INVENTORY-MAILBOX-001", frameworks: {} },
-      ] } as any,
-      frameworks: [{ id: "cis-m365-v6", data: { label: "CIS" } }] as any,
+      ] } as unknown as ControlRegistry,
+      frameworks: [{ id: "cis-m365-v6", data: { label: "CIS" } }] as unknown as FrameworkDefinition[],
       riskSeverity: { checks: {} },
     });
     expect(data.coverage.domainsPresent).toContain("Purview");
@@ -303,7 +307,7 @@ describe("buildReportData", () => {
     // Malformed registry (checks is not iterable) should cause throw inside enrichment
     expect(() =>
       buildReportData(toRows(rows), {
-        registry: { checks: null } as any,
+        registry: { checks: null } as unknown as ControlRegistry,
         frameworks: [],
         riskSeverity: { checks: {} },
       }),
@@ -312,8 +316,8 @@ describe("buildReportData", () => {
     // Malformed frameworks (not iterable array) should throw when scoring
     expect(() =>
       buildReportData(toRows(rows), {
-        registry: { checks: [] } as any,
-        frameworks: {} as any,
+        registry: { checks: [] } as unknown as ControlRegistry,
+        frameworks: {} as unknown as FrameworkDefinition[],
         riskSeverity: { checks: {} },
       }),
     ).toThrow();
@@ -321,7 +325,7 @@ describe("buildReportData", () => {
     // Registry missing checks array should throw
     expect(() =>
       buildReportData(toRows(rows), {
-        registry: {} as any,
+        registry: {} as unknown as ControlRegistry,
         frameworks: [],
         riskSeverity: { checks: {} },
       }),

@@ -23,6 +23,41 @@ function formatElapsed(ms: number): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+function statusOf(
+  key: string,
+  initialSections: LiveProgressProps["initialSections"],
+  sections: Record<string, { status?: string }>,
+): string {
+  const live = sections[key];
+  const initial = initialSections[key];
+  return live?.status ?? (initial ? "completed" : "queued");
+}
+
+/** Collapse defaults: completed/failed collapse unless the user toggled them. */
+function mergeCollapsed(
+  prev: Set<string>,
+  keys: string[],
+  statusFor: (key: string) => string,
+  manuallyToggled: Set<string>,
+): Set<string> {
+  const next = new Set(prev);
+  let changed = false;
+  for (const key of keys) {
+    if (manuallyToggled.has(key)) continue;
+    const status = statusFor(key);
+    const shouldCollapsed = status === "completed" || status === "failed";
+    if (shouldCollapsed && !next.has(key)) {
+      next.add(key);
+      changed = true;
+    }
+    if (!shouldCollapsed && next.has(key)) {
+      next.delete(key);
+      changed = true;
+    }
+  }
+  return changed ? next : prev;
+}
+
 export function LiveProgress({ runId, startedAtIso, tenantDomain, initialSections }: LiveProgressProps) {
   const { connectionState, sections, elapsedMs } = useRunEvents(runId, startedAtIso, true);
 
@@ -34,22 +69,20 @@ export function LiveProgress({ runId, startedAtIso, tenantDomain, initialSection
   const [manuallyToggled, setManuallyToggled] = React.useState<Set<string>>(new Set());
 
   // Sync collapsed defaults when sections change, but respect manual toggles
-  React.useEffect(() => {
-    setCollapsed((prev) => {
-      const next = new Set(prev);
-      let changed = false;
-      for (const key of Array.from(mergedKeys)) {
-        if (manuallyToggled.has(key)) continue;
-        const initial = initialSections[key];
-        const live = sections[key];
-        const status = live?.status ?? (initial ? "completed" : "queued");
-        const shouldCollapsed = status === "completed" || status === "failed";
-        if (shouldCollapsed && !next.has(key)) { next.add(key); changed = true; }
-        if (!shouldCollapsed && next.has(key)) { next.delete(key); changed = true; }
-      }
-      return changed ? next : prev;
-    });
-  }, [sections, initialSections, manuallyToggled, mergedKeys]);
+  // (render-phase adjustment over a stable status signature: mergedKeys is a
+  // fresh Set identity every render, so the signature string is the comparison
+  // key — this also stops the old effect re-running on every render)
+  const statusFor = (key: string) => statusOf(key, initialSections, sections);
+  const collapseSignature = Array.from(mergedKeys)
+    .sort()
+    .map((key) => `${key}:${statusFor(key)}`)
+    .join("|");
+  const [prevSignature, setPrevSignature] = React.useState(collapseSignature);
+  if (prevSignature !== collapseSignature) {
+    setPrevSignature(collapseSignature);
+    const keys = Array.from(mergedKeys);
+    setCollapsed((prev) => mergeCollapsed(prev, keys, statusFor, manuallyToggled));
+  }
 
   function toggleCollapsed(key: string) {
     setManuallyToggled((prev) => {

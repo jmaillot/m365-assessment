@@ -30,10 +30,13 @@ export function RunTriggerCard({ gated, permissionsMissing, activeRunId: initial
   const [pending, setPending] = useState(false);
   const [resolvedActiveRunId, setResolvedActiveRunId] = useState<string | undefined>(initialActiveRunId);
 
-  // Keep in sync if server prop changes (e.g. after router.refresh())
-  useEffect(() => {
+  // Keep in sync if server prop changes (render-phase adjustment: the
+  // sanctioned derived-state pattern, avoids cascading renders from effects)
+  const [prevInitialRunId, setPrevInitialRunId] = useState<string | undefined>(initialActiveRunId);
+  if (prevInitialRunId !== initialActiveRunId) {
+    setPrevInitialRunId(initialActiveRunId);
     setResolvedActiveRunId(initialActiveRunId);
-  }, [initialActiveRunId]);
+  }
 
   const refreshActiveRun = useCallback(async () => {
     try {
@@ -56,12 +59,17 @@ export function RunTriggerCard({ gated, permissionsMissing, activeRunId: initial
   // Self-correct stale bfcache / Next router-cache on back-navigation.
   // The tenant page is force-dynamic server-side, but the browser may restore
   // a cached DOM snapshot on `back` without re-running the server component.
+  // This effect only subscribes to browser events (callbacks may setState).
+  // The mount-time revalidation is deferred past commit via timeout so it is
+  // not a synchronous setState-in-effect (same fetch, one macrotask later).
   useEffect(() => {
-    // Only poll when we think there is no active run - if the prop already
-    // says active, the in-progress UI is already correct.
-    if (!initialActiveRunId) {
-      void refreshActiveRun();
-    }
+    const timer = setTimeout(() => {
+      // Only poll when we think there is no active run - if the prop already
+      // says active, the in-progress UI is already correct.
+      if (!initialActiveRunId) {
+        void refreshActiveRun();
+      }
+    }, 0);
 
     const onPageShow = () => {
       void refreshActiveRun();
@@ -73,6 +81,7 @@ export function RunTriggerCard({ gated, permissionsMissing, activeRunId: initial
     window.addEventListener("pageshow", onPageShow);
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("pageshow", onPageShow);
       document.removeEventListener("visibilitychange", onVisibility);
     };

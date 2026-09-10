@@ -117,7 +117,6 @@ export async function GET(
       // ReadableStream cancel is called when consumer cancels; ensure heartbeat cleared
       // The start's cleanup handles interval/unsubscribe; here we just ensure no leak
       try {
-        // @ts-ignore — cleanup attached above if available
         (this as unknown as { _cleanup?: () => void })._cleanup?.();
       } catch {}
     },

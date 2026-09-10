@@ -13,6 +13,7 @@ import {
   DomainFilterDropdown,
 } from "./findings-filters";
 import { DownloadIcon } from "lucide-react";
+import { mergeCategorySelection, mergeDomainSelection } from "./filter-selection";
 
 function severityStyles(severity?: string): string {
   const sev = (severity ?? "").toLowerCase();
@@ -30,22 +31,6 @@ export function ReviewsTab({ data }: { data: ReportData }) {
     [data.findings],
   );
 
-  if (reviewFindings.length === 0) {
-    return (
-      <div className="flex flex-col gap-md">
-        <Alert>
-          <AlertTitle>No reviews pending</AlertTitle>
-          <AlertDescription>
-            All checks were automatically decided — no human judgment needed. 100% is achievable without manual attestation.
-          </AlertDescription>
-        </Alert>
-        <p className="text-sm text-muted-foreground">
-          Reviews are still counted in the score (weight 0). When this tab is empty, your pass rate can reach 100%.
-        </p>
-      </div>
-    );
-  }
-
   const allDomains = React.useMemo(
     () => Array.from(new Set(reviewFindings.map((f) => f.domain))).sort((a, b) => a.localeCompare(b)),
     [reviewFindings],
@@ -58,16 +43,12 @@ export function ReviewsTab({ data }: { data: ReportData }) {
   const [selectedDomains, setSelectedDomains] = React.useState<Set<string>>(() => new Set(allDomains));
   const [selectedCategories, setSelectedCategories] = React.useState<Set<string>>(() => new Set(allCategories));
 
-  React.useEffect(() => {
-    setSelectedDomains((prev) => {
-      if (prev.size === 0 && allDomains.length > 0) return new Set(allDomains);
-      const next = new Set(prev);
-      let changed = false;
-      for (const d of allDomains) if (!next.has(d)) { next.add(d); changed = true; }
-      for (const d of Array.from(next)) if (!allDomains.includes(d)) { next.delete(d); changed = true; }
-      return changed ? next : prev;
-    });
-  }, [allDomains]);
+  // Sync domain selection when data changes (render-phase adjustment)
+  const [prevAllDomains, setPrevAllDomains] = React.useState(allDomains);
+  if (prevAllDomains !== allDomains) {
+    setPrevAllDomains(allDomains);
+    setSelectedDomains((prev) => mergeDomainSelection(prev, allDomains));
+  }
 
   const availableCategorySet = React.useMemo(() => {
     const set = new Set<string>();
@@ -75,18 +56,14 @@ export function ReviewsTab({ data }: { data: ReportData }) {
     return set;
   }, [reviewFindings, selectedDomains]);
 
-  React.useEffect(() => {
-    setSelectedCategories((prev) => {
-      if (prev.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      const next = new Set<string>();
-      for (const c of prev) if (availableCategorySet.has(c)) next.add(c);
-      for (const c of availableCategorySet) if (!prev.has(c)) next.add(c);
-      if (next.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      if (next.size !== prev.size) return next;
-      for (const c of next) if (!prev.has(c)) return next;
-      return prev;
-    });
-  }, [availableCategorySet]);
+  const [prevAvailableCategories, setPrevAvailableCategories] =
+    React.useState(availableCategorySet);
+  if (prevAvailableCategories !== availableCategorySet) {
+    setPrevAvailableCategories(availableCategorySet);
+    setSelectedCategories((prev) =>
+      mergeCategorySelection(prev, availableCategorySet),
+    );
+  }
 
   const domainCounts = React.useMemo(() => {
     const cc: Record<string, number> = {};
@@ -161,6 +138,22 @@ export function ReviewsTab({ data }: { data: ReportData }) {
   const handleClearCategories = () => { const cats = Array.from(availableCategorySet); if (cats.length>0) setSelectedCategories(new Set([cats[0]!])); };
 
   const severityLabel = (s?: string) => s ?? "unknown";
+
+  if (reviewFindings.length === 0) {
+    return (
+      <div className="flex flex-col gap-md">
+        <Alert>
+          <AlertTitle>No reviews pending</AlertTitle>
+          <AlertDescription>
+            All checks were automatically decided — no human judgment needed. 100% is achievable without manual attestation.
+          </AlertDescription>
+        </Alert>
+        <p className="text-sm text-muted-foreground">
+          Reviews are still counted in the score (weight 0). When this tab is empty, your pass rate can reach 100%.
+        </p>
+      </div>
+    );
+  }
 
   if (filtered.length === 0) {
     return (

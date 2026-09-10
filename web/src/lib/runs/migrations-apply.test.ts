@@ -56,13 +56,13 @@ type Db = ReturnType<typeof createIsolatedDb>;
 describe("migrations — fresh :memory: database", () => {
   it("creates runs and check_rows tables alongside earlier tables", () => {
     const database = createIsolatedDb();
-    const sqlite = (database as any).$client as InstanceType<typeof Database>;
+    const sqlite = (database as unknown as { $client: InstanceType<typeof Database> }).$client;
     const tables = sqlite
       .prepare(
         "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
       )
       .all()
-      .map((r: any) => r.name as string);
+      .map((r) => (r as { name: string }).name as string);
 
     expect(tables).toContain("runs");
     expect(tables).toContain("check_rows");

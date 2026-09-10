@@ -14,6 +14,7 @@ import {
   StatusFilterDropdown,
 } from "./findings-filters";
 import { DownloadIcon } from "lucide-react";
+import { mergeCategorySelection, mergeDomainSelection } from "./filter-selection";
 
 function severityStyles(severity?: string): string {
   const sev = (severity ?? "").toLowerCase();
@@ -28,10 +29,6 @@ function severityStyles(severity?: string): string {
 }
 
 export function RemediationTab({ data }: { data: ReportData }) {
-  if (data.remediationItems.length === 0) {
-    return <p className="text-sm text-muted-foreground">No open issues found in this assessment.</p>;
-  }
-
   const remediationFindings = React.useMemo(() => data.remediationItems.map((r) => r.finding), [data.remediationItems]);
 
   const allDomains = React.useMemo(
@@ -47,16 +44,12 @@ export function RemediationTab({ data }: { data: ReportData }) {
   const [selectedCategories, setSelectedCategories] = React.useState<Set<string>>(() => new Set(allCategories));
   const [selectedStatuses, setSelectedStatuses] = React.useState<Set<SaasStatus>>(() => new Set<SaasStatus>(["Fail", "Warning"]));
 
-  React.useEffect(() => {
-    setSelectedDomains((prev) => {
-      if (prev.size === 0 && allDomains.length > 0) return new Set(allDomains);
-      const next = new Set(prev);
-      let changed = false;
-      for (const d of allDomains) if (!next.has(d)) { next.add(d); changed = true; }
-      for (const d of Array.from(next)) if (!allDomains.includes(d)) { next.delete(d); changed = true; }
-      return changed ? next : prev;
-    });
-  }, [allDomains]);
+  // Sync domain selection when data changes (render-phase adjustment)
+  const [prevAllDomains, setPrevAllDomains] = React.useState(allDomains);
+  if (prevAllDomains !== allDomains) {
+    setPrevAllDomains(allDomains);
+    setSelectedDomains((prev) => mergeDomainSelection(prev, allDomains));
+  }
 
   const availableCategorySet = React.useMemo(() => {
     const set = new Set<string>();
@@ -64,18 +57,14 @@ export function RemediationTab({ data }: { data: ReportData }) {
     return set;
   }, [remediationFindings, selectedDomains]);
 
-  React.useEffect(() => {
-    setSelectedCategories((prev) => {
-      if (prev.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      const next = new Set<string>();
-      for (const c of prev) if (availableCategorySet.has(c)) next.add(c);
-      for (const c of availableCategorySet) if (!prev.has(c)) next.add(c);
-      if (next.size === 0 && availableCategorySet.size > 0) return new Set(availableCategorySet);
-      if (next.size !== prev.size) return next;
-      for (const c of next) if (!prev.has(c)) return next;
-      return prev;
-    });
-  }, [availableCategorySet]);
+  const [prevAvailableCategories, setPrevAvailableCategories] =
+    React.useState(availableCategorySet);
+  if (prevAvailableCategories !== availableCategorySet) {
+    setPrevAvailableCategories(availableCategorySet);
+    setSelectedCategories((prev) =>
+      mergeCategorySelection(prev, availableCategorySet),
+    );
+  }
 
   const domainCounts = React.useMemo(() => {
     const cc: Record<string, number> = {};
@@ -170,6 +159,10 @@ export function RemediationTab({ data }: { data: ReportData }) {
 
   // severity badge uses tinted pill grammar
   const severityLabel = (s?: string) => s ?? "unknown";
+
+  if (data.remediationItems.length === 0) {
+    return <p className="text-sm text-muted-foreground">No open issues found in this assessment.</p>;
+  }
 
   if (filtered.length === 0) {
     return (
