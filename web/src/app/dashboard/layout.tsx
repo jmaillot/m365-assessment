@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
+import { isOperatorAdmin } from "@/lib/auth/allowlist";
 import { getSession } from "@/lib/auth/session";
 import { getTenantStatus } from "@/lib/tenant/status";
 
@@ -22,7 +23,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-1">
-      <Sidebar />
+      <Sidebar showSettings={isOperatorAdmin(user.email)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
           displayName={user.displayName}

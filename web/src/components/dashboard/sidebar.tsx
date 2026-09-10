@@ -25,7 +25,7 @@ const linkClass = (active: boolean) =>
       : "text-secondary-foreground hover:bg-secondary-foreground/10",
   );
 
-export function Sidebar() {
+export function Sidebar({ showSettings = true }: { showSettings?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -49,15 +49,17 @@ export function Sidebar() {
           <Link2Icon className="size-4 shrink-0" aria-hidden="true" />
           <span className="hidden lg:inline">Tenant connection</span>
         </Link>
-        <Link
-          href="/dashboard/settings"
-          aria-current={pathname.startsWith("/dashboard/settings") ? "page" : undefined}
-          className={linkClass(pathname.startsWith("/dashboard/settings"))}
-          title="Settings"
-        >
-          <SettingsIcon className="size-4 shrink-0" aria-hidden="true" />
-          <span className="hidden lg:inline">Settings</span>
-        </Link>
+        {showSettings ? (
+          <Link
+            href="/dashboard/settings"
+            aria-current={pathname.startsWith("/dashboard/settings") ? "page" : undefined}
+            className={linkClass(pathname.startsWith("/dashboard/settings"))}
+            title="Settings"
+          >
+            <SettingsIcon className="size-4 shrink-0" aria-hidden="true" />
+            <span className="hidden lg:inline">Settings</span>
+          </Link>
+        ) : null}
         <Link
           href="/dashboard/runs"
           aria-current={pathname.startsWith("/dashboard/runs") ? "page" : undefined}
