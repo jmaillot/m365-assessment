@@ -1,3 +1,4 @@
+import { LogoReveal } from "@/components/logo-reveal";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +60,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <AlertDescription>{ACCOUNT_TYPE_COPY}</AlertDescription>
         </Alert>
       ) : null}
+
+      <LogoReveal />
 
       <Card className="w-full max-w-sm">
         <CardHeader className="items-center gap-y-xs text-center">
