@@ -1,20 +1,12 @@
 import { LogoReveal } from "@/components/logo-reveal";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 /**
- * S1 — Sign-in screen (UI-SPEC): centered card on dominant background,
- * product name in Display role, single primary CTA "Sign in with Microsoft"
- * anchoring to /api/auth/signin, helper line, and inline rejection/notice
- * alerts driven by auth-redirect params.
+ * S1 — Sign-in screen (UI-SPEC): animated ident panel with the single
+ * primary CTA "Sign in with Microsoft" anchoring to /api/auth/signin,
+ * helper line, and inline rejection/notice alerts driven by
+ * auth-redirect params.
  */
 
 const SESSION_EXPIRED_COPY = "Your session ended. Please sign in again.";
@@ -49,42 +41,28 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   return (
     <main className="flex min-h-screen flex-1 flex-col items-center justify-center gap-md bg-background p-md">
       {showSessionExpired ? (
-        <Alert className="w-full max-w-sm">
+        <Alert className="w-full max-w-[28rem]">
           <AlertTitle>Session ended</AlertTitle>
           <AlertDescription>{SESSION_EXPIRED_COPY}</AlertDescription>
         </Alert>
       ) : null}
       {showAccountTypeError ? (
-        <Alert variant="destructive" className="w-full max-w-sm">
+        <Alert variant="destructive" className="w-full max-w-[28rem]">
           <AlertTitle>Account type not supported</AlertTitle>
           <AlertDescription>{ACCOUNT_TYPE_COPY}</AlertDescription>
         </Alert>
       ) : null}
 
-      <LogoReveal />
-
-      <Card className="w-full max-w-sm">
-        <CardHeader className="items-center gap-y-xs text-center">
-          <CardTitle className="text-[28px] leading-tight font-semibold tracking-tight">
-            M365-Assess
-          </CardTitle>
-          <CardDescription>
-            Multi-tenant M365 security assessments
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
-          {/* Full-page redirect to Entra; the route owns the OIDC handshake. */}
-          <a href="/api/auth/signin">
-            <Button type="button" data-icon="inline-start">
-              <MicrosoftMark className="size-4 shrink-0 rounded-[2px]" />
-              Sign in with Microsoft
-            </Button>
-          </a>
-        </CardContent>
-        <CardFooter className="justify-center text-center">
-          <p className="text-sm text-muted-foreground">{HELPER_LINE}</p>
-        </CardFooter>
-      </Card>
+      <LogoReveal>
+        {/* Full-page redirect to Entra; the route owns the OIDC handshake. */}
+        <a href="/api/auth/signin">
+          <Button type="button" size="lg" data-icon="inline-start">
+            <MicrosoftMark className="size-4 shrink-0 rounded-[2px]" />
+            Sign in with Microsoft
+          </Button>
+        </a>
+        <p className="mt-3 text-sm text-muted-foreground">{HELPER_LINE}</p>
+      </LogoReveal>
     </main>
   );
 }
